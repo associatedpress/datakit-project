@@ -36,19 +36,16 @@ setup(
     ],
 
     keywords='datakit',
-
     platforms=['Any'],
-
-    install_requires=['cement', 'datakit'],
-
-    packages=find_packages('src/datakit'),
+    install_requires=['cliff', 'datakit'],
+    packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
-    data_files=[
-        (dkit_home() + '/plugins',   ['cli/project.py']),
-        (dkit_home() + '/plugins.d', ['config/project.conf']),
-    ],
-
+    entry_points = {
+        'datakit.plugins': [
+            'file:show = cli.show:File',
+        ]
+    },
     test_suite='tests',
     tests_require=['nose', 'mock'],
     zip_safe=False,
