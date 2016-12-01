@@ -36,10 +36,10 @@ setup(
     include_package_data=True,
     entry_points = {
         'datakit.plugins': [
-            'project:create= datakit_project.create:Project',
+            'project:create= datakit_project:Create',
         ]
     },
     test_suite='tests',
-    tests_require=['nose', 'mock'],
+    tests_require=['pytest'],
     zip_safe=False,
 )
