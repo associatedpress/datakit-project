@@ -1,16 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-PROJECT = 'datakit-plugins-project'
+PROJECT = 'datakit-project'
 VERSION = '0.1'
 
 import os
 from setuptools import setup, find_packages
-
-
-
-def dkit_home():
-    user_home = os.path.expanduser('~')
-    return os.path.join(user_home, '.datakit')
 
 setup(
     name=PROJECT,
@@ -24,7 +18,7 @@ setup(
 
     license="MIT",
 
-    url='https://github.com/zstumgoren/datakit-plugins-project',
+    url='https://github.com/zstumgoren/datakit-project',
 
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -36,20 +30,16 @@ setup(
     ],
 
     keywords='datakit',
-
     platforms=['Any'],
-
-    install_requires=['cement', 'datakit'],
-
-    packages=find_packages('src/datakit'),
-    package_dir={'': 'src'},
+    install_requires=['cliff'],
+    packages=find_packages(),
     include_package_data=True,
-    data_files=[
-        (dkit_home() + '/plugins',   ['cli/project.py']),
-        (dkit_home() + '/plugins.d', ['config/project.conf']),
-    ],
-
+    entry_points = {
+        'datakit.plugins': [
+            'project:create= datakit_project:Create',
+        ]
+    },
     test_suite='tests',
-    tests_require=['nose', 'mock'],
+    tests_require=['pytest'],
     zip_safe=False,
 )
