@@ -34,12 +34,12 @@ setup(
     install_requires=['cliff', 'cookiecutter>=1.5.0'],
     packages=find_packages(),
     include_package_data=True,
-    entry_points = {
+    entry_points={
         'datakit.plugins': [
             'project:create= datakit_project:Create',
         ]
     },
     test_suite='tests',
-    tests_require=['pytest'],
+    tests_require=['pytest', 'pytest-catchlog'],
     zip_safe=False,
 )
