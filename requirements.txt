@@ -1,2 +1,3 @@
 cliff==2.3.0
 cookiecutter==1.5.0
+-e git+ssh://git@ctcinteract-svn01.ap.org/datakit-core.git#egg=datakit-core
