@@ -1,25 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from setuptools import setup, find_packages
+
 PROJECT = 'datakit-project'
 VERSION = '0.1'
-
-import os
-from setuptools import setup, find_packages
 
 setup(
     name=PROJECT,
     version=VERSION,
-
     description="A datakit plugin to manage project CRUD",
     long_description="A longer readme with history of changes....",
-
     author="Serdar Tumgoren",
     author_email='zstumgoren@gmail.com',
-
-    license="MIT",
-
+    license="ISCL",
     url='https://github.com/zstumgoren/datakit-project',
-
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -28,7 +22,6 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Environment :: Console',
     ],
-
     keywords='datakit',
     platforms=['Any'],
     install_requires=['cliff', 'cookiecutter>=1.5.0'],
