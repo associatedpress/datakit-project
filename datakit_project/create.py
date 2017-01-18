@@ -1,13 +1,15 @@
 import logging
+import json
+import os
 
-from cookiecutter.main import cookiecutter
 from cliff.command import Command
+from cookiecutter.main import cookiecutter
+
+from .project_base import ProjectBase
 
 
-class Create(Command):
+class Create(ProjectBase, Command):
     "Create a new project"
-
-    log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
@@ -17,6 +19,11 @@ class Create(Command):
             default='',
             help="Local path/Github URL for a Cookiecutter template"
         )
+        parser.add_argument(
+            'no-input',
+            default=False,
+            help="Disable prompts for CLI input"
+        )
         # TODO: parser.add_argument(
         #    '--make-default',
         # help="Make the template the default for new projects"
@@ -25,35 +32,25 @@ class Create(Command):
 
     def take_action(self, parsed_args):
         # Create project skeleton
-        template = self._get_template(parsed_args)
+        template = self.get_template(parsed_args)
         if template:
             self.log.info("Creating project: {}".format(parsed_args.template))
             cookiecutter(
                 template,
                 overwrite_if_exists=True,
+                no_input=parsed_args.no_input
             )
+            # Update default template if it's empty or specifically requested
+            if self.default_template == '':
+                self.update_configs({'default_template': template})
+                tmplt_msg = "Set default template to {} in plugin config ({})".format(template, self.plugin_config_path)
+                self.log.info(tmplt_msg)
         else:
-            msg = 'No project templates have been installed. You must ' +\
-                'specify the local path or URL to a Cookiecutter project repo'
-            msg2 = "foobar"
-            self.log.info(msg)
-            print(msg)
+            error_msg = 'No project templates have been installed. ' +\
+                'You must specify the local path or URL to a ' +\
+                'Cookiecutter project repo.'
+            self.log.info(error_msg)
         # TODO: if parserd_args.make_default, update ~/.datakit/plugins/datakit_project.json
         # TODO: if datakit-vcs plugin, call it's bootstrap method
         # TODO: if project_management (i.e. Gitlab), call it's bootstrap method
         return parsed_args.name
-
-    # PRIVATE
-
-    def _get_template(self, parsed_args):
-        if parsed_args.template != '':
-            return parsed_args.template
-        else:
-            return self._default_template
-
-    @property
-    def _default_template(self):
-        # TODO: Get cookiecutter home directory using Cookiecutter API and check
-        # the plugin's config file .../.datakit/plugins/datakit_project.json for the 
-        # default_template setting
-        pass
