@@ -13,14 +13,13 @@ class Create(ProjectBase, Command):
 
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
-        # NOTE: optional by default
         parser.add_argument(
-            'template',
+            '--template',
             default='',
             help="Local path/Github URL for a Cookiecutter template"
         )
         parser.add_argument(
-            'no-input',
+            '--no-input',
             default=False,
             help="Disable prompts for CLI input"
         )
