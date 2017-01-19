@@ -1,7 +1,3 @@
-import logging
-import json
-import os
-
 from cliff.command import Command
 from cookiecutter.main import cookiecutter
 
