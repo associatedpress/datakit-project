@@ -5,10 +5,10 @@ import os
 from cliff.command import Command
 from cookiecutter.main import cookiecutter
 
-from .project_base import ProjectBase
+from .command_helpers import CommandHelpers
 
 
-class Create(ProjectBase, Command):
+class Create(CommandHelpers, Command):
     "Create a new project"
 
     def get_parser(self, prog_name):

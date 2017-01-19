@@ -22,14 +22,28 @@ def setup_environment(monkeypatch, tmpdir):
         tmp_dir
     )
     monkeypatch.setenv('DATAKIT_HOME', datakit_home(tmp_dir))
-    create_plugin_config(tmp_dir)
 
 
-def test_warning_when_no_default_repo(caplog):
+def test_missing_config_file(caplog, tmpdir):
+    """
+    Create should auto-generate config file if it's missing
+    """
+    cmd = Create(None, None, cmd_name='project:create')
+    parsed_args = mock.Mock()
+    parsed_args.template = ''
+    cmd.run(parsed_args)
+    msg = 'No project templates have been installed'
+    assert msg in caplog.text
+    assert cmd.configs == {'default_template': ''}
+    assert os.path.exists(cmd.plugin_config_path)
+
+
+def test_warning_when_no_default_repo_setting(caplog, tmpdir):
     """
     Test CLI warning when project:create invoked for the first time
     without specifying a template
     """
+    create_plugin_config(tmpdir.strpath)
     cmd = Create(None, None, cmd_name='project:create')
     parsed_args = mock.Mock()
     parsed_args.template = ''
@@ -43,6 +57,7 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     Test creation of first project with specification of a
     local Cookiecutter template
     """
+    create_plugin_config(tmpdir.strpath)
     # NOTE: using a template with preset defaults to sidestep need for
     # passing no_input=True flag. For examples requiring input,
     # Cookiecutter prompts for input and tests fail with:
