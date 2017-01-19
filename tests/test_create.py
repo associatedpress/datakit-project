@@ -58,10 +58,6 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     local Cookiecutter template
     """
     create_plugin_config(tmpdir.strpath)
-    # NOTE: using a template with preset defaults to sidestep need for
-    # passing no_input=True flag. For examples requiring input,
-    # Cookiecutter prompts for input and tests fail with:
-    #   OSError: reading from stdin while output is captured)
     fake_repo_path = os.path.join(os.getcwd(), 'tests/fake-repo')
     # Switch directories
     monkeypatch.chdir(tmpdir)
@@ -80,8 +76,41 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     assert log_pattern_matches
 
 
-# TODO: test default_template is used after initial project creation
-# TODO: test default_template is NOT updated if it's a subsequent project install
+def test_usage_of_default_template(monkeypatch, tmpdir):
+    """
+    Create should use the default template if a new template is not specified.
+    """
+    # Set up the configs to point default template at our fake repo
+    fake_repo_path = os.path.join(os.getcwd(), 'tests/fake-repo')
+    create_plugin_config(tmpdir.strpath, {'default_template': fake_repo_path})
+    monkeypatch.chdir(tmpdir)
+    parsed_args = mock.Mock()
+    # NOTE: We're NOT specifying a template here, but we set the default above
+    parsed_args.template = ''
+    cmd = Create(None, None, cmd_name='project:create')
+    cmd.run(parsed_args)
+    assert 'fake-project' in [pth.basename for pth in tmpdir.listdir()]
+
+
+def test_default_template_persistence(monkeypatch, tmpdir):
+    """
+    Default template should not be overridden by new templates
+    unless explicitly requested.
+    """
+    original_repo = os.path.join(os.getcwd(), 'tests/fake-repo')
+    new_repo = os.path.join(os.getcwd(), 'tests/fake-repo-two')
+    create_plugin_config(tmpdir.strpath, {'default_template': original_repo})
+    monkeypatch.chdir(tmpdir)
+    parsed_args = mock.Mock()
+    parsed_args.template = new_repo
+    cmd = Create(None, None, cmd_name='project:create')
+    cmd.run(parsed_args)
+    dir_contents = [pth.basename for pth in tmpdir.listdir()]
+    assert 'fake-project' not in dir_contents
+    assert 'fake-project-two' in dir_contents
+    assert cmd.configs['default_template'] == original_repo
+
+
 # TODO: test defalt_template is updated if flag is passed
 # TODO: test that non-default template is used when specified
 # TODO: test default_template path that does not exist (e.g. of template was local and has since been moved)
