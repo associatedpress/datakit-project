@@ -10,19 +10,23 @@ class Create(CommandHelpers, Command):
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
         parser.add_argument(
+            '-t',
             '--template',
             default='',
             help="Local path/Github URL for a Cookiecutter template"
         )
         parser.add_argument(
+            '-d',
+            '--make-default',
+            default=False,
+            help="Make the template the default for new projects"
+        )
+        parser.add_argument(
+            '-i',
             '--no-input',
             default=False,
             help="Disable prompts for CLI input"
         )
-        # TODO: parser.add_argument(
-        #    '--make-default',
-        # help="Make the template the default for new projects"
-        # )
         return parser
 
     def take_action(self, parsed_args):
@@ -36,7 +40,7 @@ class Create(CommandHelpers, Command):
                 no_input=parsed_args.no_input
             )
             # Update default template if it's empty or specifically requested
-            if self.default_template == '':
+            if self.default_template == '' or parsed_args.make_default:
                 self.update_configs({'default_template': template})
                 tmplt_msg = "Set default template to {} in plugin config ({})".format(template, self.plugin_config_path)
                 self.log.info(tmplt_msg)

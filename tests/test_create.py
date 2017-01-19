@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 from unittest import mock
 
 import cookiecutter.config as cc_config
@@ -92,10 +93,10 @@ def test_usage_of_default_template(monkeypatch, tmpdir):
     assert 'fake-project' in [pth.basename for pth in tmpdir.listdir()]
 
 
-def test_default_template_persistence(monkeypatch, tmpdir):
+def test_usage_of_nondefault_template(monkeypatch, tmpdir):
     """
-    Default template should not be overridden by new templates
-    unless explicitly requested.
+    Create should support use of non-default template
+    without overriding default template setting.
     """
     original_repo = os.path.join(os.getcwd(), 'tests/fake-repo')
     new_repo = os.path.join(os.getcwd(), 'tests/fake-repo-two')
@@ -111,6 +112,35 @@ def test_default_template_persistence(monkeypatch, tmpdir):
     assert cmd.configs['default_template'] == original_repo
 
 
-# TODO: test defalt_template is updated if flag is passed
-# TODO: test that non-default template is used when specified
-# TODO: test default_template path that does not exist (e.g. of template was local and has since been moved)
+def test_new_default_template(caplog, monkeypatch, tmpdir):
+    """
+    Create should support ability to set a new default template.
+    """
+    original_repo = os.path.join(os.getcwd(), 'tests/fake-repo')
+    new_repo = os.path.join(os.getcwd(), 'tests/fake-repo-two')
+    create_plugin_config(tmpdir.strpath, {'default_template': original_repo})
+    monkeypatch.chdir(tmpdir)
+    # On first pass, we specify new template and set it as new default
+    parsed_args = mock.Mock()
+    parsed_args.template = new_repo
+    parsed_args.make_default = True
+    cmd = Create(None, None, cmd_name='project:create')
+    cmd.run(parsed_args)
+    dir_contents = [pth.basename for pth in tmpdir.listdir()]
+    assert 'fake-project' not in dir_contents
+    assert 'fake-project-two' in dir_contents
+    assert cmd.configs['default_template'].endswith('fake-repo-two')
+    msg_pattern = r"Set default template to.+?fake-repo-two in plugin config (.+?config.json)"
+    log_pattern_matches = True if re.search(msg_pattern, caplog.text) else False
+    assert log_pattern_matches
+    # Remove fake project and recreate without specifying the template
+    # to ensure it's now applied as the default
+    project_directory = os.path.join(tmpdir.strpath, 'fake-project-two')
+    shutil.rmtree(project_directory)
+    args_new = mock.Mock()
+    args_new.template = ''
+    cmd = Create(None, None, cmd_name='project:create')
+    cmd.run(args_new)
+    dir_contents_updated = [pth.basename for pth in tmpdir.listdir()]
+    assert 'fake-project' not in dir_contents_updated
+    assert 'fake-project-two' in dir_contents_updated
