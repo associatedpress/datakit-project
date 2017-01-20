@@ -18,6 +18,7 @@ class Create(CommandHelpers, Command):
         parser.add_argument(
             '-d',
             '--make-default',
+            action='store_true',
             default=False,
             help="Make the template the default for new projects"
         )
