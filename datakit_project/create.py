@@ -52,4 +52,3 @@ class Create(CommandHelpers, Command):
         # TODO: if parserd_args.make_default, update ~/.datakit/plugins/datakit_project.json
         # TODO: if datakit-vcs plugin, call it's bootstrap method
         # TODO: if project_management (i.e. Gitlab), call it's bootstrap method
-        return parsed_args.template
