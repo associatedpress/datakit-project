@@ -1,7 +1,9 @@
 from cliff.command import Command
 from cookiecutter.main import cookiecutter
+from cookiecutter.config import DEFAULT_CONFIG
 
 from .command_helpers import CommandHelpers
+from .utils import resolve_repo_dir
 
 
 class Create(CommandHelpers, Command):
@@ -25,6 +27,7 @@ class Create(CommandHelpers, Command):
         parser.add_argument(
             '-i',
             '--no-input',
+            action='store_true',
             default=False,
             help="Disable prompts for CLI input"
         )
@@ -34,22 +37,23 @@ class Create(CommandHelpers, Command):
         # Create project skeleton
         template = self.get_template(parsed_args)
         if template:
-            self.log.info("Creating project: {}".format(parsed_args.template))
+            self.log.info("Creating project from template: {}".format(template))
             cookiecutter(
                 template,
                 overwrite_if_exists=True,
                 no_input=parsed_args.no_input
             )
+            repo_dir = resolve_repo_dir(template)
             # Update default template if it's empty or specifically requested
             if self.default_template == '' or parsed_args.make_default:
-                self.update_configs({'default_template': template})
-                tmplt_msg = "Set default template to {} in plugin config ({})".format(template, self.plugin_config_path)
+                self.update_configs({'default_template': repo_dir})
+                tmplt_msg = "Set default template to {} in plugin config ({})".format(repo_dir, self.plugin_config_path)
                 self.log.info(tmplt_msg)
         else:
             error_msg = 'No project templates have been installed. ' +\
                 'You must specify the local path or URL to a ' +\
                 'Cookiecutter project repo.'
             self.log.info(error_msg)
-        # TODO: if parserd_args.make_default, update ~/.datakit/plugins/datakit_project.json
         # TODO: if datakit-vcs plugin, call it's bootstrap method
         # TODO: if project_management (i.e. Gitlab), call it's bootstrap method
+

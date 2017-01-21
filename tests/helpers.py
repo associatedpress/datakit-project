@@ -1,4 +1,3 @@
-import json
 import os
 
 from datakit.utils import mkdir_p
