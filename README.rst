@@ -1,3 +1,17 @@
+.. image:: https://img.shields.io/pypi/v/datakit-project.svg
+        :target: https://pypi.python.org/pypi/datakit-project
+
+
+.. image:: https://img.shields.io/travis/associatedpress/datakit-project.svg
+    :target: https://travis-ci.org/associatedpress/datakit-project
+    :alt: Linux build status on Travis CI
+
+
+.. image:: https://readthedocs.org/projects/datakit-project/badge/?version=latest
+    :target: https://datakit-project.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
+
 ===============================
 datakit-project plugin
 ===============================
