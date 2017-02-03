@@ -6,11 +6,9 @@
     :target: https://travis-ci.org/associatedpress/datakit-project
     :alt: Linux build status on Travis CI
 
-
 .. image:: https://readthedocs.org/projects/datakit-project/badge/?version=latest
-    :target: https://datakit-project.readthedocs.io/en/latest/?badge=latest
+    :target: http://datakit-project.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
-
 
 ===============================
 datakit-project plugin
