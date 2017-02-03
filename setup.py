@@ -1,5 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""
+
+datakit-project
+---------------
+
+A project-skeleton generator for use with the `datakit <https://pypi.python.org/pypi/datakit-core/>`_ framework.
+
+* `Code <https://github.com/associatedpress/datakit-project>`_
+* `Docs <http://datakit-project.readthedocs.io/en/latest/>`_
+
+"""
 from setuptools import setup, find_packages
 
 PROJECT = 'datakit-project'
@@ -8,23 +17,25 @@ VERSION = '0.1'
 setup(
     name=PROJECT,
     version=VERSION,
-    description="A datakit plugin to manage project CRUD",
-    long_description="A longer readme with history of changes....",
+    description="A datakit plugin to generate new projects.",
+    long_description=__doc__,
     author="Serdar Tumgoren",
     author_email='zstumgoren@gmail.com',
     license="ISCL",
-    url='https://github.com/zstumgoren/datakit-project',
+    url='https://github.com/associatedpress/datakit-project',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
+        'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Natural Language :: English',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
-        'Environment :: Console',
     ],
     keywords='datakit',
     platforms=['Any'],
-    install_requires=['cliff', 'cookiecutter>=1.5.0'],
+    install_requires=['cliff', 'cookiecutter>=1.5.0', 'datakit-core'],
     packages=find_packages(),
     include_package_data=True,
     entry_points={
