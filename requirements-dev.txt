@@ -1,5 +1,8 @@
 bumpversion==0.5.3
 datakit-core==0.1
+# Peg docutils until below bug resolved
+# https://github.com/sphinx-doc/sphinx/issues/3212
+docutils==0.12
 wheel==0.23.0
 watchdog==0.8.3
 flake8==2.4.1
