@@ -54,6 +54,3 @@ class Create(CommandHelpers, Command):
                 'You must specify the local path or URL to a ' +\
                 'Cookiecutter project repo.'
             self.log.info(error_msg)
-        # TODO: if datakit-vcs plugin, call it's bootstrap method
-        # TODO: if project_management (i.e. Gitlab), call it's bootstrap method
-
