@@ -34,13 +34,13 @@ Creating your first project
 There are a few ways to create a project from a template::
 
     # From a local project
-    $ datakit project:create --template /local/path/to/cookiecutter-basic-project
+    $ datakit project create --template /local/path/to/cookiecutter-basic-project
 
     # From Github
-    $ datakit project:create --template https://github.com/associatedpress/cookiecutter-basic-project.git
+    $ datakit project create --template https://github.com/associatedpress/cookiecutter-basic-project.git
 
     # From Github, but using an alias (less typing! WOOT!)
-    $ datakit project:create --template gh:associatedpress/cookiecutter-basic-project
+    $ datakit project create --template gh:associatedpress/cookiecutter-basic-project
 
 When you create a project, you will be prompted on the command-line for a series
 of information. Fill in the info or hit *return* to accept defaults, as appropriate.
@@ -56,11 +56,11 @@ Default template
 As a convenience, the template used on your first project will be set as a 
 default for future projects::
 
-    $ datakit project::create # Uses cookiecutter-basic-project
+    $ datakit project create # Uses cookiecutter-basic-project
 
 You can update the default template by using the ``--make-default`` flag::
 
-    $ datakit project:create --make-default --template gh:associatedpress/cookiecutter-some-other-project
+    $ datakit project create --make-default --template gh:associatedpress/cookiecutter-some-other-project
 
 Or you can directy edit the ``default_template`` variable in the :ref:`plugin-configuration`:
 
@@ -75,16 +75,16 @@ Installing more templates
 
 Datakit suports use of more than one template. You simply need to specify the new template::
 
-    $ datakit project:create --template gh:associatedpress/cookiecutter-some-other-project
+    $ datakit project create --template gh:associatedpress/cookiecutter-some-other-project
 
 Once installed locally, you can save a few key strokes::
 
     # Here, we drop the Github alias and organization
-    $ datakit project:create --template cookiecutter-some-other-project
+    $ datakit project create --template cookiecutter-some-other-project
 
 Or save yourself even more typing and make it the default template::
 
-    $ datakit project:create --make-default --template cookiecutter-some-other-project
+    $ datakit project create --make-default --template cookiecutter-some-other-project
 
 See :ref:`default-template` for more details on updating the default template.
 

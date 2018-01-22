@@ -1,6 +1,5 @@
 from cliff.command import Command
 from cookiecutter.main import cookiecutter
-from cookiecutter.config import DEFAULT_CONFIG
 
 from .command_helpers import CommandHelpers
 from .utils import resolve_repo_dir

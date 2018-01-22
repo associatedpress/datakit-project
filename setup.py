@@ -12,7 +12,7 @@ A project-skeleton generator for use with the `datakit <https://pypi.python.org/
 from setuptools import setup, find_packages
 
 PROJECT = 'datakit-project'
-VERSION = '0.1'
+VERSION = '0.2.0'
 
 setup(
     name=PROJECT,
@@ -32,6 +32,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
     keywords='datakit',
     platforms=['Any'],
@@ -40,7 +41,7 @@ setup(
     include_package_data=True,
     entry_points={
         'datakit.plugins': [
-            'project:create= datakit_project:Create',
+            'project create= datakit_project:Create',
         ]
     },
     test_suite='tests',

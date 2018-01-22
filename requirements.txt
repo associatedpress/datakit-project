@@ -1,3 +1,3 @@
 cliff==2.3.0
 cookiecutter==1.5.0
-datakit-core==0.1
+datakit-core==0.2.1

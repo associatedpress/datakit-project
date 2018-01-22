@@ -31,7 +31,7 @@ def test_missing_config_file(caplog, tmpdir):
     """
     Create should auto-generate config file if it's missing
     """
-    cmd = Create(None, None, cmd_name='project:create')
+    cmd = Create(None, None, cmd_name='project create')
     parsed_args = mock.Mock()
     parsed_args.template = ''
     parsed_args.make_default = False
@@ -44,11 +44,11 @@ def test_missing_config_file(caplog, tmpdir):
 
 def test_warning_when_no_default_repo_setting(caplog, tmpdir):
     """
-    Test CLI warning when project:create invoked for the first time
+    Test CLI warning when 'project create' invoked for the first time
     without specifying a template
     """
     create_plugin_config(tmpdir.strpath)
-    cmd = Create(None, None, cmd_name='project:create')
+    cmd = Create(None, None, cmd_name='project create')
     parsed_args = mock.Mock()
     parsed_args.template = ''
     parsed_args.make_default = False
@@ -70,7 +70,7 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     parsed_args = mock.Mock()
     parsed_args.template = fake_repo_path
     parsed_args.make_default = False
-    cmd = Create(None, None, cmd_name='project:create')
+    cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     # Tests:
     #  Project was created
@@ -94,7 +94,7 @@ def test_usage_of_default_template(monkeypatch, tmpdir):
     # NOTE: We're NOT specifying a template here, but we set the default above
     parsed_args.template = ''
     parsed_args.make_default = False
-    cmd = Create(None, None, cmd_name='project:create')
+    cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     assert 'fake-project' in [pth.basename for pth in tmpdir.listdir()]
 
@@ -111,7 +111,7 @@ def test_usage_of_nondefault_template(monkeypatch, tmpdir):
     parsed_args = mock.Mock()
     parsed_args.template = new_repo
     parsed_args.make_default = False
-    cmd = Create(None, None, cmd_name='project:create')
+    cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     dir_contents = [pth.basename for pth in tmpdir.listdir()]
     assert 'fake-project' not in dir_contents
@@ -131,7 +131,7 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     parsed_args = mock.Mock()
     parsed_args.template = new_repo
     parsed_args.make_default = True
-    cmd = Create(None, None, cmd_name='project:create')
+    cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     dir_contents = [pth.basename for pth in tmpdir.listdir()]
     assert 'fake-project' not in dir_contents
@@ -146,7 +146,7 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     shutil.rmtree(project_directory)
     args_new = mock.Mock()
     args_new.template = ''
-    cmd = Create(None, None, cmd_name='project:create')
+    cmd = Create(None, None, cmd_name='project create')
     cmd.run(args_new)
     dir_contents_updated = [pth.basename for pth in tmpdir.listdir()]
     assert 'fake-project' not in dir_contents_updated
@@ -158,18 +158,20 @@ def test_github_install(caplog, monkeypatch, tmpdir):
     cc_home = cookiecutter_home(tmpdir.strpath)
     orig_repo = os.path.join(os.getcwd(), 'tests/fake-repo')
     new_repo = os.path.join(cc_home, 'fake-repo')
+
     # Monkeypatch subprocess to prevent actual git clone
     # and simply copy over the repo instead
     def mockreturn(repo_bits, cwd, stderr):
         shutil.copytree(orig_repo, new_repo)
         return 'gh:associatedpress/fake-repo'
+
     monkeypatch.setattr(subprocess, 'check_output', mockreturn)
     monkeypatch.chdir(tmpdir)
     parsed_args = mock.Mock()
     # NOTE: We're NOT specifying a template here, but we set the default above
     parsed_args.template = 'gh:associatedpress/fake-repo'
     parsed_args.make_default = False
-    cmd = Create(None, None, cmd_name='project:create')
+    cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     assert 'fake-repo' in os.listdir(cc_home)
     assert cmd.configs['default_template'] == new_repo
