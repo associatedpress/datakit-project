@@ -6,11 +6,11 @@ from datakit_project.utils import write_json
 
 
 def cookiecutter_home(tmpdir):
-    return os.path.join(tmpdir, '.cookiecutters')
+    return os.path.join(str(tmpdir), '.cookiecutters')
 
 
 def datakit_home(tmpdir):
-    return os.path.join(tmpdir, '.datakit')
+    return os.path.join(str(tmpdir), '.datakit')
 
 
 def create_cookiecutter_home(tmpdir):
