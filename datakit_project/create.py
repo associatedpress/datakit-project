@@ -2,6 +2,7 @@ from cliff.command import Command
 from cookiecutter.main import cookiecutter
 
 from .command_helpers import CommandHelpers
+from .help_text import NO_TEMPLATES_ERROR_WITH_HELP_MSG
 from .utils import resolve_repo_dir
 
 
@@ -49,7 +50,5 @@ class Create(CommandHelpers, Command):
                 tmplt_msg = "Set default template to {} in plugin config ({})".format(repo_dir, self.plugin_config_path)
                 self.log.info(tmplt_msg)
         else:
-            error_msg = 'No project templates have been installed. ' +\
-                'You must specify the local path or URL to a ' +\
-                'Cookiecutter project repo.'
-            self.log.info(error_msg)
+            self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)
+
