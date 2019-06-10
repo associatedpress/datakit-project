@@ -43,6 +43,7 @@ setup(
     entry_points={
         'datakit.plugins': [
             'project create= datakit_project:Create',
+            'project templates= datakit_project:Templates',
         ]
     },
     test_suite='tests',
