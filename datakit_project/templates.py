@@ -2,11 +2,9 @@ import os
 
 import cookiecutter.config as cc_config
 from cliff.command import Command
-from cookiecutter.main import cookiecutter
 
 from .command_helpers import CommandHelpers
 from .help_text import NO_TEMPLATES_ERROR_WITH_HELP_MSG, TEMPLATE_USAGE_MSG
-from .utils import resolve_repo_dir
 
 
 class Templates(CommandHelpers, Command):
@@ -28,4 +26,3 @@ class Templates(CommandHelpers, Command):
                 msg += "\t- {}\n".format(template)
             msg += "\n" + TEMPLATE_USAGE_MSG
             self.log.info(msg)
-
