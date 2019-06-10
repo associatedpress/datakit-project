@@ -52,7 +52,7 @@ test:
 	python setup.py test
 
 test-all:
-	tox
+	tox -p auto
 
 coverage:
 	coverage run --source datakit_project setup.py test
