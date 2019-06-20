@@ -1,16 +1,19 @@
+import argparse
 from cliff.command import Command
 from cookiecutter.main import cookiecutter
 
 from .command_helpers import CommandHelpers
-from .help_text import NO_TEMPLATES_ERROR_WITH_HELP_MSG
+from .help_text import CREATE_HELP_MSG, NO_TEMPLATES_ERROR_WITH_HELP_MSG
 from .utils import resolve_repo_dir
 
 
 class Create(CommandHelpers, Command):
-    "Create a new project"
+
+    _description = "Create a new project.\n\n" + CREATE_HELP_MSG
 
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
+        parser.formatter_class = argparse.RawTextHelpFormatter
         parser.add_argument(
             '-t',
             '--template',
@@ -51,4 +54,3 @@ class Create(CommandHelpers, Command):
                 self.log.info(tmplt_msg)
         else:
             self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)
-
