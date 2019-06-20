@@ -35,7 +35,7 @@ setup(
     ],
     keywords='datakit',
     platforms=['Any'],
-    install_requires=['cliff', 'cookiecutter>=1.5.0', 'datakit-core'],
+    install_requires=['cliff', 'cookiecutter>=1.6.0', 'datakit-core'],
     packages=find_packages(),
     include_package_data=True,
     entry_points={
