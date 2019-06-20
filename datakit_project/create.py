@@ -8,8 +8,10 @@ from .utils import resolve_repo_dir
 
 
 class Create(CommandHelpers, Command):
+    """Create a new project."""
 
-    _description = "Create a new project.\n\n" + CREATE_HELP_MSG
+    def get_epilog(self):
+        return CREATE_HELP_MSG
 
     def get_parser(self, prog_name):
         parser = super(Create, self).get_parser(prog_name)
