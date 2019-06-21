@@ -1,9 +1,12 @@
 import logging
 import os
 
-import datakit.utils
-
-from .utils import read_json, write_json
+from datakit.utils import (
+    home_dir,
+    mkdir_p,
+    read_json,
+    write_json
+)
 
 
 class CommandHelpers:
@@ -25,7 +28,7 @@ class CommandHelpers:
         return configs
 
     def write_configs(self, configs):
-        datakit.utils.mkdir_p(self.plugin_config_parent_dir)
+        mkdir_p(self.plugin_config_parent_dir)
         write_json(self.plugin_config_path, configs)
 
     @property
@@ -40,7 +43,7 @@ class CommandHelpers:
     @property
     def plugin_config_parent_dir(self):
         return os.path.join(
-            datakit.utils.home_dir(),
+            home_dir(),
             'plugins/datakit-project'
         )
 

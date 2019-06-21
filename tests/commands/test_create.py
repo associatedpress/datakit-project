@@ -4,50 +4,17 @@ import shutil
 import subprocess
 from unittest import mock
 
-import cookiecutter.config as cc_config
 import pytest
 
 from datakit_project import Create
 
-from .helpers import (
-    cookiecutter_home,
-    create_plugin_config,
-    datakit_home
-)
 
-
-@pytest.fixture(autouse=True)
-def setup_environment(monkeypatch, tmpdir):
-    tmp_dir = tmpdir.strpath
-    monkeypatch.setitem(
-        cc_config.DEFAULT_CONFIG,
-        'cookiecutters_dir',
-        os.path.join(tmp_dir, '.cookiecutters')
-    )
-    monkeypatch.setenv('DATAKIT_HOME', datakit_home(tmp_dir))
-
-
-def test_missing_config_file(caplog, tmpdir):
-    """
-    Create should auto-generate config file if it's missing
-    """
-    cmd = Create(None, None, cmd_name='project create')
-    parsed_args = mock.Mock()
-    parsed_args.template = ''
-    parsed_args.make_default = False
-    cmd.run(parsed_args)
-    msg = 'No project templates have been installed'
-    assert msg in caplog.text
-    assert cmd.configs == {'default_template': ''}
-    assert os.path.exists(cmd.plugin_config_path)
-
-
-def test_warning_when_no_default_repo_setting(caplog, tmpdir):
+@pytest.mark.usefixtures('create_plugin_config_default')
+def test_warning_when_no_default_repo_setting(caplog):
     """
     Test CLI warning when 'project create' invoked for the first time
     without specifying a template
     """
-    create_plugin_config(tmpdir.strpath)
     cmd = Create(None, None, cmd_name='project create')
     parsed_args = mock.Mock()
     parsed_args.template = ''
@@ -57,12 +24,12 @@ def test_warning_when_no_default_repo_setting(caplog, tmpdir):
     assert msg in caplog.text
 
 
+@pytest.mark.usefixtures('create_plugin_config_default')
 def test_create_initial_project(caplog, monkeypatch, tmpdir):
     """
     Test creation of first project with specification of a
     local Cookiecutter template
     """
-    create_plugin_config(tmpdir.strpath)
     fake_repo_path = os.path.join(os.getcwd(), 'tests/fake-repo')
     # Switch directories
     monkeypatch.chdir(tmpdir)
@@ -82,16 +49,16 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     assert log_pattern_matches
 
 
+@pytest.mark.usefixtures('create_plugin_config_fake_repo')
 def test_usage_of_default_template(monkeypatch, tmpdir):
     """
     Create should use the default template if a new template is not specified.
     """
     # Set up the configs to point default template at our fake repo
-    fake_repo_path = os.path.join(os.getcwd(), 'tests/fake-repo')
-    create_plugin_config(tmpdir.strpath, {'default_template': fake_repo_path})
     monkeypatch.chdir(tmpdir)
     parsed_args = mock.Mock()
-    # NOTE: We're NOT specifying a template here, but we set the default above
+    # NOTE: We're NOT specifying a template here to
+    # test usage of default set in fixture
     parsed_args.template = ''
     parsed_args.make_default = False
     cmd = Create(None, None, cmd_name='project create')
@@ -99,6 +66,7 @@ def test_usage_of_default_template(monkeypatch, tmpdir):
     assert 'fake-project' in [pth.basename for pth in tmpdir.listdir()]
 
 
+@pytest.mark.usefixtures('create_plugin_config_fake_repo')
 def test_usage_of_nondefault_template(monkeypatch, tmpdir):
     """
     Create should support use of non-default template
@@ -106,7 +74,6 @@ def test_usage_of_nondefault_template(monkeypatch, tmpdir):
     """
     original_repo = os.path.join(os.getcwd(), 'tests/fake-repo')
     new_repo = os.path.join(os.getcwd(), 'tests/fake-repo-two')
-    create_plugin_config(tmpdir.strpath, {'default_template': original_repo})
     monkeypatch.chdir(tmpdir)
     parsed_args = mock.Mock()
     parsed_args.template = new_repo
@@ -119,13 +86,13 @@ def test_usage_of_nondefault_template(monkeypatch, tmpdir):
     assert cmd.configs['default_template'] == original_repo
 
 
+@pytest.mark.usefixtures('create_plugin_config_fake_repo')
 def test_new_default_template(caplog, monkeypatch, tmpdir):
     """
     Create should support ability to set a new default template.
     """
     original_repo = os.path.join(os.getcwd(), 'tests/fake-repo')
     new_repo = os.path.join(os.getcwd(), 'tests/fake-repo-two')
-    create_plugin_config(tmpdir.strpath, {'default_template': original_repo})
     monkeypatch.chdir(tmpdir)
     # On first pass, we specify new template and set it as new default
     parsed_args = mock.Mock()
@@ -153,11 +120,9 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     assert 'fake-project-two' in dir_contents_updated
 
 
-def test_github_install(caplog, monkeypatch, tmpdir):
-    # Copy
-    cc_home = cookiecutter_home(tmpdir.strpath)
+def test_github_install(caplog, monkeypatch, cookiecutter_home, tmpdir):
     orig_repo = os.path.join(os.getcwd(), 'tests/fake-repo')
-    new_repo = os.path.join(cc_home, 'fake-repo')
+    new_repo = os.path.join(cookiecutter_home, 'fake-repo')
 
     # Monkeypatch subprocess to prevent actual git clone
     # and simply copy over the repo instead
@@ -173,5 +138,5 @@ def test_github_install(caplog, monkeypatch, tmpdir):
     parsed_args.make_default = False
     cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
-    assert 'fake-repo' in os.listdir(cc_home)
+    assert 'fake-repo' in os.listdir(cookiecutter_home)
     assert cmd.configs['default_template'] == new_repo

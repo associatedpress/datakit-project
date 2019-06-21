@@ -4,7 +4,7 @@ from cookiecutter.main import cookiecutter
 
 from .command_helpers import CommandHelpers
 from .help_text import CREATE_HELP_MSG, NO_TEMPLATES_ERROR_WITH_HELP_MSG
-from .utils import resolve_repo_dir
+from datakit_project.utils import resolve_repo_dir
 
 
 class Create(CommandHelpers, Command):

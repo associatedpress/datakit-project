@@ -7,16 +7,6 @@ import pytest
 from datakit_project.utils import resolve_repo_dir
 
 
-@pytest.fixture(autouse=True)
-def setup_environment(monkeypatch, tmpdir):
-    tmp_dir = tmpdir.strpath
-    monkeypatch.setitem(
-        cc_config.DEFAULT_CONFIG,
-        'cookiecutters_dir',
-        os.path.join(tmp_dir, '.cookiecutters')
-    )
-
-
 # TODO: Update resolve_repo_dir to use cookiecutter DEFAULT_CONFIG
 # then monkeypatch the variable here
 def test_repo_dir_for_local_repo():
