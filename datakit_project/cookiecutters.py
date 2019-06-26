@@ -26,7 +26,7 @@ class Cookiecutters:
         sha1, commit_date, subject = info.split('\n')
         return {
             'Name': template,
-            'sha1': sha1,
+            'SHA': sha1,
             'Date': commit_date,
             'Subject': subject
         }
