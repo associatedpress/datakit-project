@@ -35,7 +35,12 @@ setup(
     ],
     keywords='datakit',
     platforms=['Any'],
-    install_requires=['cliff', 'cookiecutter>=1.6.0', 'datakit-core'],
+    install_requires=[
+        'cliff',
+        'cookiecutter>=1.6.0',
+        'datakit-core',
+        'prettytable'
+    ],
     packages=find_packages(),
     include_package_data=True,
     entry_points={
@@ -45,6 +50,9 @@ setup(
         ]
     },
     test_suite='tests',
-    tests_require=['pytest', 'pytest-catchlog'],
+    tests_require=[
+        'pytest',
+        'pytest-catchlog',
+    ],
     zip_safe=False,
 )

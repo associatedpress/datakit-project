@@ -6,7 +6,7 @@ from unittest import mock
 import cookiecutter.config as cc_config
 import pytest
 
-from datakit_project import Templates
+from datakit_project import cookiecutters, Templates
 
 
 @pytest.fixture
@@ -47,12 +47,39 @@ def test_multiple_templates(caplog, cookiecutter_home, deploy_template, monkeypa
     deploy_template(cookiecutter_home, 'tests/fake-repo-two')
     # Switch directories
     monkeypatch.chdir(tmpdir)
-    # Run the command
-    parsed_args = mock.Mock()
-    cmd = Templates(None, None, cmd_name='project templates')
-    cmd.run(parsed_args)
-    msg_pattern = r"- fake-repo\n\t- fake-repo-two\n\nTo use a locally installed"
-    log_pattern_matches = True if re.search(msg_pattern, caplog.text) else False
-    assert log_pattern_matches
-
-
+    # Mock the return value for Cookiecutters.info
+    with mock.patch('datakit_project.commands.templates.Cookiecutters') as MockClass:
+        instance = MockClass.return_value
+        instance.info.return_value = [
+            {
+              'Name': 'fake-repo',
+              'SHA': 'a11706f',
+              'Date': '2017-02-02',
+              'Subject': 'Testing'
+            },
+            {
+              'Name': 'fake-repo-two',
+              'SHA': '55f62a0',
+              'Date': '2019-03-06',
+              'Subject': 'Testing'
+            },
+        ]
+        # Run the command
+        parsed_args = mock.Mock()
+        cmd = Templates(None, None, cmd_name='project templates')
+        cmd.run(parsed_args)
+        header = "Name            SHA       Date         Subject"
+        repo1 = "fake-repo       a11706f   2017-02-02   Testing"
+        repo2 = "fake-repo-two   55f62a0   2019-03-06   Testing"
+        expected = [header, repo1, repo2]
+        # Some gross cleanup of caplog.text is necessary because it displays log level info
+        actual = [re.sub(r"templates.py\s+\d+\sINFO", "", line).strip()  for line in caplog.text.split('\n')]
+        # Test that expected lines appear in displayed text
+        for line in expected:
+            assert line in actual
+        # Test alpha sortting by repo name
+        header_idx = actual.index(header)
+        repo1_idx = actual.index(repo1)
+        repo2_idx = actual.index(repo2)
+        assert header_idx < repo1_idx
+        assert repo1_idx < repo2_idx
