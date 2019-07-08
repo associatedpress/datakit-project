@@ -66,6 +66,7 @@ def test_multiple_templates(caplog, cookiecutter_home, deploy_template, monkeypa
         ]
         # Run the command
         parsed_args = mock.Mock()
+        parsed_args.status = False
         cmd = Templates(None, None, cmd_name='project templates')
         cmd.run(parsed_args)
         header = "Name            SHA       Date         Subject"

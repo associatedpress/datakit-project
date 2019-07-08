@@ -1,5 +1,6 @@
 import os
-import subprocess
+
+from .repository import Repository
 
 
 class Cookiecutters:
@@ -7,26 +8,18 @@ class Cookiecutters:
     def __init__(self, cookiecutters_dir):
         self.cookiecutters_dir = cookiecutters_dir
 
-    def info(self):
+    def info(self, status=False):
         templates = os.listdir(self.cookiecutters_dir)
         repos_info = []
-        cmd = ['git', 'log', '-n', '1', '--pretty=format:"%h\n%cd\n%s"', '--date=short']
         for template in templates:
             repo_dir = os.path.join(self.cookiecutters_dir, template)
-            output = subprocess.check_output(
-                cmd,
-                cwd=repo_dir,
-                stderr=subprocess.STDOUT
-            )
-            info = self._prepare_repo_info(template, output.decode().strip('"'))
-            repos_info.append(info)
+            repo = Repository(repo_dir)
+            data = repo.info()
+            if status:
+                repo.fetch()
+                upstream = repo.upstream_info()
+                if upstream['commits_behind'] == 0:
+                    upstream['commits_behind'] = 'Up-to-date'
+                data.update(upstream)
+            repos_info.append(data)
         return repos_info
-
-    def _prepare_repo_info(self, template, info):
-        sha1, commit_date, subject = info.split('\n')
-        return {
-            'Name': template,
-            'SHA': sha1,
-            'Date': commit_date,
-            'Subject': subject
-        }
