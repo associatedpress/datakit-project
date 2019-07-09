@@ -29,6 +29,11 @@ class Repository:
             'commits_behind': self.commits_behind_upstream,
         }
 
+    def update(self):
+        remote, branch = self.upstream_tracking_branch.split('/')
+        cmd = ['git', 'pull', remote, branch]
+        self._syscall(cmd)
+
     @property
     def local_branch(self):
         cmd = ['git', 'rev-parse', '--abbrev-ref', 'HEAD']

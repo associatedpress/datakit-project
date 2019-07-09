@@ -3,7 +3,11 @@ import cookiecutter.config as cc_config
 from cliff.command import Command
 
 from .command_helpers import CommandHelpers
-from .help_text import NO_TEMPLATES_ERROR_WITH_HELP_MSG, TEMPLATE_USAGE_MSG
+from .help_text import (
+    NO_TEMPLATES_ERROR_WITH_HELP_MSG,
+    TEMPLATE_USAGE_MSG,
+    TEMPLATE_UPDATE_MSG
+)
 from datakit_project.cookiecutters import Cookiecutters
 from datakit_project.formatters.templates import Templates as formatter
 
@@ -38,3 +42,4 @@ class Templates(CommandHelpers, Command):
             self.log.info(tbl)
             self.log.info('\n')
             self.log.info(TEMPLATE_USAGE_MSG)
+            self.log.info(TEMPLATE_UPDATE_MSG)

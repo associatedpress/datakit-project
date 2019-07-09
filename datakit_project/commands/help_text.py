@@ -8,6 +8,17 @@ the local path or URL to a Cookiecutter project repo, e.g.:
 
 NO_TEMPLATES_ERROR_MSG = '\n'.join(("No project templates have been installed!", TEMPLATE_INSTALL_ON_CREATE_MSG))
 
+TEMPLATE_STATUS_MSG = """Use the below command for more detailed status information on templates:
+
+    datakit project templates --status
+"""
+
+TEMPLATE_UPDATE_MSG = """To update locally installed Cookiecutter templates:
+
+    datakit project templates update
+
+"""
+
 TEMPLATE_INSTALL_HELP_MSG = """Check out the below URLs for pre-baked templates and installation options:
 
   - A Pantry Full of Cookiecutters

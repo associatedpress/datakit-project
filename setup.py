@@ -47,6 +47,7 @@ setup(
         'datakit.plugins': [
             'project create= datakit_project:Create',
             'project templates= datakit_project:Templates',
+            'project templates update= datakit_project:TemplatesUpdate',
         ]
     },
     test_suite='tests',
