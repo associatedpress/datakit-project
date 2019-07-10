@@ -19,6 +19,7 @@ def test_warning_when_no_default_repo_setting(caplog):
     parsed_args = mock.Mock()
     parsed_args.template = ''
     parsed_args.make_default = False
+    parsed_args.interactive = False
     cmd.run(parsed_args)
     msg = 'No project templates have been installed'
     assert msg in caplog.text
@@ -37,6 +38,7 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     parsed_args = mock.Mock()
     parsed_args.template = fake_repo_path
     parsed_args.make_default = False
+    parsed_args.interactive = False
     cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     # Tests:
@@ -61,6 +63,7 @@ def test_usage_of_default_template(monkeypatch, tmpdir):
     # test usage of default set in fixture
     parsed_args.template = ''
     parsed_args.make_default = False
+    parsed_args.interactive = False
     cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     assert 'fake-project' in [pth.basename for pth in tmpdir.listdir()]
@@ -78,6 +81,7 @@ def test_usage_of_nondefault_template(monkeypatch, tmpdir):
     parsed_args = mock.Mock()
     parsed_args.template = new_repo
     parsed_args.make_default = False
+    parsed_args.interactive = False
     cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     dir_contents = [pth.basename for pth in tmpdir.listdir()]
@@ -98,6 +102,7 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     parsed_args = mock.Mock()
     parsed_args.template = new_repo
     parsed_args.make_default = True
+    parsed_args.interactive = False
     cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     dir_contents = [pth.basename for pth in tmpdir.listdir()]
@@ -113,6 +118,7 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     shutil.rmtree(project_directory)
     args_new = mock.Mock()
     args_new.template = ''
+    args_new.interactive = False
     cmd = Create(None, None, cmd_name='project create')
     cmd.run(args_new)
     dir_contents_updated = [pth.basename for pth in tmpdir.listdir()]
@@ -136,6 +142,7 @@ def test_github_install(caplog, monkeypatch, cookiecutter_home, tmpdir):
     # NOTE: We're NOT specifying a template here, but we set the default above
     parsed_args.template = 'gh:associatedpress/fake-repo'
     parsed_args.make_default = False
+    parsed_args.interactive = False
     cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     assert 'fake-repo' in os.listdir(cookiecutter_home)

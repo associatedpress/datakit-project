@@ -10,7 +10,7 @@ class Cookiecutters:
 
     def info(self, status=False):
         repos_info = []
-        for template in self._templates:
+        for template in self.list_templates():
             repo_dir = os.path.join(self.cookiecutters_dir, template)
             repo = Repository(repo_dir)
             data = repo.info()
@@ -29,6 +29,5 @@ class Cookiecutters:
             repo = Repository(repo_dir)
             repo.update()
 
-    @property
-    def _templates(self):
+    def list_templates(self):
         return os.listdir(self.cookiecutters_dir)

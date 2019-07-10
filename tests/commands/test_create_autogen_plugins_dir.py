@@ -23,6 +23,7 @@ def test_missing_config_file(caplog, tmpdir):
     parsed_args = mock.Mock()
     parsed_args.template = ''
     parsed_args.make_default = False
+    parsed_args.interactive = False
     cmd.run(parsed_args)
     msg = 'No project templates have been installed'
     assert msg in caplog.text

@@ -11,23 +11,6 @@ from datakit_project import cookiecutters, Templates
 from datakit_project import exceptions as dkit_exceptions
 
 
-@pytest.fixture
-def deploy_template():
-    copied_repos = []
-    def _deploy_template(cc_home, repo_path):
-        src_repo = repo_path
-        base_name = repo_path.split('/')[-1]
-        dest_repo = os.path.join(cc_home, base_name)
-        shutil.copytree(src_repo, dest_repo)
-        copied_repos.append(dest_repo)
-        return dest_repo
-
-    yield _deploy_template
-
-    for repo in copied_repos:
-        shutil.rmtree(repo)
-
-
 def test_noupdate_status(caplog, cookiecutter_home, deploy_template, monkeypatch, tmpdir):
     deploy_template(cookiecutter_home, 'tests/fake-repo')
     deploy_template(cookiecutter_home, 'tests/fake-repo-two')

@@ -36,6 +36,23 @@ def create_plugin_config_fake_repo(plugin_dir):
     write_json(config_file, config)
 
 
+@pytest.fixture
+def deploy_template():
+    copied_repos = []
+    def _deploy_template(cc_home, repo_path):
+        src_repo = repo_path
+        base_name = repo_path.split('/')[-1]
+        dest_repo = os.path.join(cc_home, base_name)
+        shutil.copytree(src_repo, dest_repo)
+        copied_repos.append(dest_repo)
+        return dest_repo
+
+    yield _deploy_template
+
+    for repo in copied_repos:
+        shutil.rmtree(repo)
+
+
 @pytest.fixture(autouse='session')
 def setup_environment(monkeypatch, cookiecutter_home, datakit_home):
     mkdir_p(cookiecutter_home)

@@ -9,22 +9,6 @@ import pytest
 from datakit_project import cookiecutters, Templates
 
 
-@pytest.fixture
-def deploy_template():
-    copied_repos = []
-    def _deploy_template(cc_home, repo_path):
-        src_repo = repo_path
-        base_name = repo_path.split('/')[-1]
-        dest_repo = os.path.join(cc_home, base_name)
-        shutil.copytree(src_repo, dest_repo)
-        copied_repos.append(dest_repo)
-        return dest_repo
-
-    yield _deploy_template
-
-    for repo in copied_repos:
-        shutil.rmtree(repo)
-
 def test_no_templates(caplog, cookiecutter_home, monkeypatch, tmpdir):
     """
     Templates should provide helpful info if no cookiecutter templates are installed

@@ -1,9 +1,12 @@
 import argparse
 from cliff.command import Command
 from cookiecutter.main import cookiecutter
+from cookiecutter.prompt import read_user_choice
+import cookiecutter.config as cc_config
 
 from .command_helpers import CommandHelpers
 from .help_text import CREATE_HELP_MSG, NO_TEMPLATES_ERROR_WITH_HELP_MSG
+from datakit_project.cookiecutters import Cookiecutters
 from datakit_project.utils import resolve_repo_dir
 
 
@@ -31,16 +34,29 @@ class Create(CommandHelpers, Command):
         )
         parser.add_argument(
             '-i',
+            '--interactive',
+            action='store_true',
+            default=False,
+            help="enter interactive mode to choose a project template"
+        )
+        parser.add_argument(
+            '-n',
             '--no-input',
             action='store_true',
             default=False,
-            help="Disable prompts for CLI input"
+            help="Whether to allow user input for Cookiecutter execution"
         )
         return parser
 
     def take_action(self, parsed_args):
-        # Create project skeleton
-        template = self.get_template(parsed_args)
+        if parsed_args.interactive and parsed_args.template == '':
+            cc_home = cc_config.DEFAULT_CONFIG['cookiecutters_dir']
+            cc = Cookiecutters(cc_home)
+            templates = cc.list_templates()
+            template = read_user_choice('project template', templates)
+        else:
+            # Create project skeleton
+            template = self.get_template(parsed_args)
         if template:
             self.log.info("Creating project from template: {}".format(template))
             cookiecutter(
