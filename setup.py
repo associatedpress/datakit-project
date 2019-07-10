@@ -36,6 +36,7 @@ setup(
     keywords='datakit',
     platforms=['Any'],
     install_requires=[
+        'click',
         'cliff',
         'cookiecutter>=1.6.0',
         'datakit-core',
