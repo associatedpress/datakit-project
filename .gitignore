@@ -55,10 +55,14 @@ coverage.xml
 # Sphinx documentation
 docs/
 docs/_build/
+!docs/_static/
 !docs/Makefile
 !docs/conf.py
 !docs/index.rst
 !docs/readme.rst
+!docs/install.rst
+!docs/usage.rst
+!docs/templates.rst
 
 # PyBuilder
 target/
