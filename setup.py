@@ -12,7 +12,7 @@ A project-skeleton generator for use with the `datakit <https://pypi.python.org/
 from setuptools import setup, find_packages
 
 PROJECT = 'datakit-project'
-VERSION = 'version='0.3.0''
+VERSION = '0.3.0'
 
 setup(
     name=PROJECT,
