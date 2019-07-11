@@ -1,3 +1,5 @@
+click
 cliff==2.14.1
 cookiecutter==1.6.0
 datakit-core==0.2.1
+prettytable
