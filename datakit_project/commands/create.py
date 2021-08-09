@@ -61,7 +61,6 @@ class Create(CommandHelpers, Command):
             self.log.info("Creating project from template: {}".format(template))
             cookiecutter(
                 template,
-                overwrite_if_exists=True,
                 no_input=parsed_args.no_input
             )
             repo_dir = resolve_repo_dir(template)
