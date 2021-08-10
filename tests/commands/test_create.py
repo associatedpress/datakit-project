@@ -70,6 +70,26 @@ def test_usage_of_default_template(monkeypatch, tmpdir):
 
 
 @pytest.mark.usefixtures('create_plugin_config_fake_repo')
+def test_usage_of_default_template(monkeypatch, tmpdir, caplog):
+    """
+    Create should exit gracefully and provide an appropriate
+    error message when user provides a slug with the same name
+    as an existing folder in the current working directory.
+    """
+    # Set up the configs to point default template at our fake repo
+    monkeypatch.chdir(tmpdir)
+    parsed_args = mock.Mock()
+    parsed_args.template = ''
+    parsed_args.make_default = False
+    parsed_args.interactive = False
+    cmd = Create(None, None, cmd_name='project create')
+    cmd.run(parsed_args)
+    cmd = Create(None, None, cmd_name='project create')
+    cmd.run(parsed_args)
+    assert 'Error: A project with the slug you provided already exists in this directory. Try again with a different slug.' in caplog.text
+
+
+@pytest.mark.usefixtures('create_plugin_config_fake_repo')
 def test_usage_of_nondefault_template(monkeypatch, tmpdir):
     """
     Create should support use of non-default template

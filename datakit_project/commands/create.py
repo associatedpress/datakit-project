@@ -2,6 +2,7 @@ import argparse
 from cliff.command import Command
 from cookiecutter.main import cookiecutter
 from cookiecutter.prompt import read_user_choice
+from cookiecutter.exceptions import OutputDirExistsException
 import cookiecutter.config as cc_config
 
 from .command_helpers import CommandHelpers
@@ -59,15 +60,18 @@ class Create(CommandHelpers, Command):
             template = self.get_template(parsed_args)
         if template:
             self.log.info("Creating project from template: {}".format(template))
-            cookiecutter(
-                template,
-                no_input=parsed_args.no_input
-            )
-            repo_dir = resolve_repo_dir(template)
-            # Update default template if it's empty or specifically requested
-            if self.default_template == '' or parsed_args.make_default:
-                self.update_configs({'default_template': repo_dir})
-                tmplt_msg = "Set default template to {} in plugin config ({})".format(repo_dir, self.plugin_config_path)
-                self.log.info(tmplt_msg)
+            try:
+                cookiecutter(
+                    template,
+                    no_input=parsed_args.no_input
+                )
+                repo_dir = resolve_repo_dir(template)
+                # Update default template if it's empty or specifically requested
+                if self.default_template == '' or parsed_args.make_default:
+                    self.update_configs({'default_template': repo_dir})
+                    tmplt_msg = "Set default template to {} in plugin config ({})".format(repo_dir, self.plugin_config_path)
+                    self.log.info(tmplt_msg)
+            except OutputDirExistsException:
+                self.log.info("Error: A project with the slug you provided already exists in this directory. Try again with a different slug.")
         else:
             self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)
