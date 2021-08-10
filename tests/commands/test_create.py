@@ -84,7 +84,6 @@ def test_usage_of_default_template(monkeypatch, tmpdir, caplog):
     parsed_args.interactive = False
     cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
-    cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     assert 'Error: A project with the slug you provided already exists in this directory. Try again with a different slug.' in caplog.text
 
