@@ -70,7 +70,7 @@ def test_usage_of_default_template(monkeypatch, tmpdir):
 
 
 @pytest.mark.usefixtures('create_plugin_config_fake_repo')
-def test_usage_of_default_template(monkeypatch, tmpdir, caplog):
+def test_graceful_handling_of_project_overwrite_attempt(monkeypatch, tmpdir, caplog):
     """
     Create should exit gracefully and provide an appropriate
     error message when user provides a slug with the same name
