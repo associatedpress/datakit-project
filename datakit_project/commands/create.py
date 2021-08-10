@@ -47,6 +47,13 @@ class Create(CommandHelpers, Command):
             default=False,
             help="Whether to allow user input for Cookiecutter execution"
         )
+        parser.add_argument(
+            '-o',
+            '--overwrite-if-exists',
+            action='store_true',
+            default=False,
+            help="Whether to overwrite a directory with the same name as project slug or exit gracefully"
+        )
         return parser
 
     def take_action(self, parsed_args):
@@ -63,7 +70,8 @@ class Create(CommandHelpers, Command):
             try:
                 cookiecutter(
                     template,
-                    no_input=parsed_args.no_input
+                    no_input=parsed_args.no_input,
+                    overwrite_if_exists=parsed_args.overwrite_if_exists
                 )
                 repo_dir = resolve_repo_dir(template)
                 # Update default template if it's empty or specifically requested

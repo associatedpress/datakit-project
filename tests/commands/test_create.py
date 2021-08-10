@@ -82,6 +82,7 @@ def test_graceful_handling_of_project_overwrite_attempt(monkeypatch, tmpdir, cap
     parsed_args.template = ''
     parsed_args.make_default = False
     parsed_args.interactive = False
+    parsed_args.overwrite_if_exists = False
     cmd = Create(None, None, cmd_name='project create')
     cmd.run(parsed_args)
     cmd.run(parsed_args)
