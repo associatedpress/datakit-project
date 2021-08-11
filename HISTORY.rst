@@ -2,6 +2,11 @@
 History
 =======
 
+0.3.1 (2021-08-11)
+------------------
+
+* Prevent overwrite of pre-existing projects
+
 0.3.0 (2019-07-12)
 ------------------
 
