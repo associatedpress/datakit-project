@@ -23,7 +23,7 @@ setup(
     author="Serdar Tumgoren",
     author_email='zstumgoren@gmail.com',
     license="ISCL",
-    url='https://github.com/associatedpress/datakit-project',
+    url='https://datakit.ap.org',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
