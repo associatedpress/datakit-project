@@ -77,9 +77,16 @@ class Create(CommandHelpers, Command):
                 # Update default template if it's empty or specifically requested
                 if self.default_template == '' or parsed_args.make_default:
                     self.update_configs({'default_template': repo_dir})
-                    tmplt_msg = "Set default template to {} in plugin config ({})".format(repo_dir, self.plugin_config_path)
+                    tmplt_msg = "Set default template to {} in plugin config ({})".format(
+                        repo_dir,
+                        self.plugin_config_path
+                    )
                     self.log.info(tmplt_msg)
             except OutputDirExistsException:
-                self.log.info("Error: A project with the slug you provided already exists in this directory. Try again with a different slug.")
+                msg = (
+                    "Error: A project with the slug you provided already "
+                    "exists in this directory. Try again with a different slug."
+                )
+                self.log.info(msg)
         else:
             self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)
