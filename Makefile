@@ -22,7 +22,9 @@ help:
 	@echo "coverage - check code coverage quickly with the default Python"
 	@echo "docs - generate Sphinx HTML documentation, including API docs"
 	@echo "servedocs - compile the docs and watch for changes"
-	@echo "release - package and upload a release"
+	@echo "check-release - Check release for errors"
+	@echo "test-release - package and uploade to Test PyPI"
+	@echo "release - package and upload a release to PyPI"
 	@echo "dist - package"
 	@echo "install - install the package to the active Python's site-packages"
 
@@ -72,14 +74,27 @@ docs:
 servedocs: docs
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
+
+#
+# Releases
+#
+check-release: ## check release for potential errors
+	twine check dist/*
+
+test-release: clean dist ## release distros to test.pypi.org
+	twine upload -r testpypi dist/*
+
+release: clean dist ## package and upload a release
+	twine upload -r pypi dist/*
+
+dist: clean ## builds source and wheel package
+	python setup.py sdist
+	python setup.py bdist_wheel
+	@ls -l dist
+
 release: clean
 	python setup.py sdist upload
 	python setup.py bdist_wheel upload
-
-dist: clean
-	python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
 
 install: clean
 	python setup.py install

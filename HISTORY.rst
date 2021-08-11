@@ -2,10 +2,17 @@
 History
 =======
 
-0.3.1 (2021-08-11)
+0.3.2 (2021-08-11)
 ------------------
 
-* Prevent overwrite of pre-existing projects
+* Prevent overwrite of pre-existing cookiecutter projects
+* Update development status to prod/stable
+* Add project urls to setup.py
+
+0.3.1  (2019-07-12)
+-------------------
+
+* Fix broken PyPI release
 
 0.3.0 (2019-07-12)
 ------------------

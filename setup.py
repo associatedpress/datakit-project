@@ -19,12 +19,13 @@ setup(
     version=VERSION,
     description="A datakit plugin to generate new projects.",
     long_description=__doc__,
+    long_description_content_type='text/x-rst',
     author="Serdar Tumgoren",
     author_email='zstumgoren@gmail.com',
     license="ISCL",
     url='https://github.com/associatedpress/datakit-project',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
@@ -56,5 +57,10 @@ setup(
         'pytest',
         'pytest-catchlog',
     ],
+    project_urls={
+        'Maintainer': 'https://github.com/associatedpress',
+        'Source': 'https://github.com/associatedpress/datakit-project',
+        'Tracker': 'https://github.com/associatedpress/datakit-project/issues'
+    },
     zip_safe=False,
 )
