@@ -92,9 +92,5 @@ dist: clean ## builds source and wheel package
 	python setup.py bdist_wheel
 	@ls -l dist
 
-release: clean
-	python setup.py sdist upload
-	python setup.py bdist_wheel upload
-
 install: clean
 	python setup.py install
