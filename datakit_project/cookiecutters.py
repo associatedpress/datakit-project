@@ -13,7 +13,12 @@ class Cookiecutters:
         for template in self.list_templates():
             repo_dir = os.path.join(self.cookiecutters_dir, template)
             repo = Repository(repo_dir)
-            data = repo.info()
+            try:
+                data = repo.info()
+            except NotADirectoryError:
+                continue
+            except AttributeError as e:
+                continue
             if status:
                 repo.fetch()
                 upstream = repo.upstream_info()
