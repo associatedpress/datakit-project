@@ -24,10 +24,10 @@ There are a few ways to create a project from a template::
     $ datakit project create --template /local/path/to/cookiecutter-basic-project
 
     # From Github
-    $ datakit project create --template https://github.com/associatedpress/cookiecutter-basic-project.git
+    $ datakit project create --template https://github/path/to/cookiecutter-template.git
 
     # From Github, but using an alias (less typing! WOOT!)
-    $ datakit project create --template gh:associatedpress/cookiecutter-basic-project
+    $ datakit project create --template gh:path/to/cookiecutter
 
 When you create a project, you will be prompted on the command-line for a series
 of information. Fill in the info or hit *return* to accept defaults, as appropriate.
