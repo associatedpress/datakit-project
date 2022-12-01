@@ -12,6 +12,18 @@
     :target: http://datakit-project.readthedocs.io/en/latest/
     :alt: Documentation Status
 
+Datakit
+=======
+
+Datakit is a pluggable command-line tool for managing the life cycle
+of data projects.
+
+The Associated Press Data Team uses Datakit to auto-generate project skeletons,
+archive and share data on Amazon S3, and other routine tasks.
+
+Datakit is a thin wrapper around the Cliff_ command-line framework and
+is intended for use with a growing ecosystem of plugins.
+
 Overview
 ========
 
@@ -37,6 +49,6 @@ Please be sure to check out the latest release of Cookiecutter to see
 if it might be a better fit.
 
 .. _Cookiecutter: https://cookiecutter.readthedocs.io/en/latest/
-.. _datakit command-line framework: http://associatedpress.github.io/datakit/
+.. _datakit command-line framework: https://datakit.ap.org/
 
 https://datakit-core.readthedocs.io/en/latest/readme.html
