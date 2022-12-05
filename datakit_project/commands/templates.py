@@ -35,11 +35,13 @@ class Templates(CommandHelpers, Command):
         if len(templates) == 0:
             self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)
         else:
+            default_cc_name = self.configs["default_template"].split(cc_home)[1]
             if parsed_args.status:
-                tbl = formatter.status(templates)
+                tbl = formatter.status(templates, default_cc_name)
             else:
-                tbl = formatter.list(templates)
+                tbl = formatter.list(templates, default_cc_name)
             self.log.info(tbl)
+            self.log.info("  *: Default template")
             self.log.info('\n')
             self.log.info(TEMPLATE_USAGE_MSG)
             self.log.info(TEMPLATE_UPDATE_MSG)

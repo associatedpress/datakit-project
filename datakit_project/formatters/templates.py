@@ -4,10 +4,12 @@ import prettytable as pt
 class Templates:
 
     @classmethod
-    def list(cls, data):
+    def list(cls, data, default_cc_name):
         fields = ('Name', 'SHA', 'Date', 'Subject')
         tbl = cls._ptable(fields)
         for row in data:
+            if (row['Name'] == default_cc_name):
+                row['Name'] += '*'
             vals = (
                 row['Name'],
                 row['SHA'],
@@ -18,7 +20,7 @@ class Templates:
         return tbl
 
     @classmethod
-    def status(cls, data):
+    def status(cls, data, default_cc_name):
         fields = (
             'Name',
             'SHA',
@@ -29,6 +31,8 @@ class Templates:
         )
         tbl = cls._ptable(fields)
         for row in data:
+            if (row['Name'] == default_cc_name):
+                row['Name'] += '*'
             vals = (
                 row['Name'],
                 row['SHA'],
