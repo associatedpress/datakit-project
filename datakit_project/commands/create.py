@@ -38,7 +38,7 @@ class Create(CommandHelpers, Command):
             '--interactive',
             action='store_true',
             default=False,
-            help="enter interactive mode to choose a project template"
+            help="Enter interactive mode to choose a project template"
         )
         parser.add_argument(
             '-n',
@@ -53,6 +53,12 @@ class Create(CommandHelpers, Command):
             action='store_true',
             default=False,
             help="Whether to overwrite a directory with the same name as project slug or exit gracefully"
+        )
+        parser.add_argument(
+            '-c',
+            '--checkout',
+            action='store',
+            help="Branch, tag or commit to checkout from git clone"
         )
         return parser
 
@@ -70,6 +76,7 @@ class Create(CommandHelpers, Command):
             try:
                 cookiecutter(
                     template,
+                    checkout=parsed_args.checkout,
                     no_input=parsed_args.no_input,
                     overwrite_if_exists=parsed_args.overwrite_if_exists
                 )
