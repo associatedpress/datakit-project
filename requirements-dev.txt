@@ -2,7 +2,7 @@ bumpversion==0.5.3
 # Peg docutils until below bug resolved
 # https://github.com/sphinx-doc/sphinx/issues/3212
 docutils==0.12
-wheel==0.38.1
+wheel==0.46.2
 watchdog==0.8.3
 flake8==2.4.1
 tox==3.12.1
