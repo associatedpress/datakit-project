@@ -5,6 +5,8 @@ from cookiecutter.config import BUILTIN_ABBREVIATIONS, DEFAULT_CONFIG
 from cookiecutter.repository import expand_abbreviations, is_repo_url
 from cookiecutter.vcs import identify_repo
 
+from datakit_project.exceptions import UnsupportedRepoType
+
 
 def resolve_repo_dir(template):
     """
@@ -30,6 +32,10 @@ def resolve_repo_dir(template):
                                                      tail.rsplit('.git')[0]))
         elif repo_type == 'hg':
             repo_dir = os.path.normpath(os.path.join(cc_home, tail))
+        else:
+            raise UnsupportedRepoType(
+                "Could not classify '{}' as a git or hg repository.".format(template)
+            )
     else:
         repo_dir = os.path.abspath(template)
     return repo_dir

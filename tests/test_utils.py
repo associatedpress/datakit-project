@@ -1,8 +1,10 @@
 import os
 
+import pytest
 
 import cookiecutter.config as cc_config
 
+from datakit_project.exceptions import UnsupportedRepoType
 from datakit_project.utils import resolve_repo_dir
 
 
@@ -35,3 +37,15 @@ def test_repo_dir_for_url():
     expected_dir = os.path.join(cc_home, 'fake-repo')
     actual_dir = resolve_repo_dir('https://github.com/associatedpress/fake-repo.git')
     assert expected_dir == actual_dir
+
+
+def test_repo_dir_for_unsupported_repo_type(monkeypatch):
+    """
+    Should raise a clear error instead of crashing with UnboundLocalError.
+    """
+    monkeypatch.setattr(
+        'datakit_project.utils.identify_repo',
+        lambda raw_url: ('svn', raw_url)
+    )
+    with pytest.raises(UnsupportedRepoType):
+        resolve_repo_dir('https://example.com/fake-repo.git')
