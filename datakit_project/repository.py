@@ -30,7 +30,7 @@ class Repository:
         }
 
     def update(self):
-        remote, branch = self.upstream_tracking_branch.split('/')
+        remote, branch = self.upstream_tracking_branch.split('/', 1)
         cmd = ['git', 'pull', remote, branch]
         self._syscall(cmd)
 
