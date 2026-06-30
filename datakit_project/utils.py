@@ -30,7 +30,6 @@ def resolve_repo_dir(template):
                                                      tail.rsplit('.git')[0]))
         elif repo_type == 'hg':
             repo_dir = os.path.normpath(os.path.join(cc_home, tail))
-            repo_dir = template
     else:
         repo_dir = os.path.abspath(template)
     return repo_dir
