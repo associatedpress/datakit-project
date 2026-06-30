@@ -1,7 +1,4 @@
 import os
-import re
-import shutil
-import subprocess
 from unittest import mock
 
 import pytest
@@ -19,7 +16,7 @@ def test_missing_config_file(caplog, tmpdir):
     """
     Create should auto-generate config file if it's missing
     """
-    cmd = Create(None, None, cmd_name='project create')
+    cmd = Create(None, None)
     parsed_args = mock.Mock()
     parsed_args.template = ''
     parsed_args.make_default = False

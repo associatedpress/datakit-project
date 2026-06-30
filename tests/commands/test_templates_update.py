@@ -1,12 +1,8 @@
-import os
-import re
-import shutil
 from unittest import mock
 
-import cookiecutter.config as cc_config
 import pytest
 
-from datakit_project import cookiecutters, TemplatesUpdate
+from datakit_project import TemplatesUpdate
 
 
 def test_nothing_to_update(caplog):
@@ -21,7 +17,7 @@ def test_nothing_to_update(caplog):
         instance.upstream_tracking_branch.return_value = 'origin/master'
         # Run the command
         parsed_args = mock.Mock()
-        cmd = TemplatesUpdate(None, None, cmd_name='project templates update')
+        cmd = TemplatesUpdate(None, None)
         cmd.run(parsed_args)
         instance.info.assert_called_once_with(status=True)
         assert "Local templates are all up-to-date" in caplog.text
@@ -109,7 +105,7 @@ def test_update(repo_info, selection, expected, monkeypatch):
         )
         # Run the command
         parsed_args = mock.Mock()
-        cmd = TemplatesUpdate(None, None, cmd_name='project templates update')
+        cmd = TemplatesUpdate(None, None)
         cmd.run(parsed_args)
         instance.info.assert_called_once_with(status=True)
         instance.update.assert_called_once_with(expected)

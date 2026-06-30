@@ -1,12 +1,8 @@
-import os
 import re
-import shutil
 from unittest import mock
 
-import cookiecutter.config as cc_config
-import pytest
 
-from datakit_project import cookiecutters, Templates
+from datakit_project import Templates
 
 
 def test_no_templates(caplog, cookiecutter_home, monkeypatch, tmpdir):
@@ -17,7 +13,7 @@ def test_no_templates(caplog, cookiecutter_home, monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
     # Run the command
     parsed_args = mock.Mock()
-    cmd = Templates(None, None, cmd_name='project templates')
+    cmd = Templates(None, None)
     cmd.run(parsed_args)
     assert cookiecutter_home in caplog.text
     assert "No project templates have been installed!" in caplog.text
@@ -51,7 +47,7 @@ def test_multiple_templates(caplog, cookiecutter_home, deploy_template, monkeypa
         # Run the command
         parsed_args = mock.Mock()
         parsed_args.status = False
-        cmd = Templates(None, None, cmd_name='project templates')
+        cmd = Templates(None, None)
         cmd.run(parsed_args)
         header = "Name            SHA       Date         Subject"
         repo1 = "fake-repo       a11706f   2017-02-02   Testing"

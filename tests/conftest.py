@@ -3,7 +3,7 @@ import shutil
 
 import cookiecutter.config as cc_config
 import pytest
-from datakit.utils import makedirs, mkdir_p, write_json
+from datakit.utils import mkdir_p, write_json
 
 
 @pytest.fixture

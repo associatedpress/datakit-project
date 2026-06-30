@@ -2,7 +2,6 @@ import os
 
 
 import cookiecutter.config as cc_config
-import pytest
 
 from datakit_project.utils import resolve_repo_dir
 

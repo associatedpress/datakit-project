@@ -15,7 +15,7 @@ def test_warning_when_no_default_repo_setting(caplog):
     Test CLI warning when 'project create' invoked for the first time
     without specifying a template
     """
-    cmd = Create(None, None, cmd_name='project create')
+    cmd = Create(None, None)
     parsed_args = mock.Mock()
     parsed_args.template = ''
     parsed_args.make_default = False
@@ -39,7 +39,7 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     parsed_args.template = fake_repo_path
     parsed_args.make_default = False
     parsed_args.interactive = False
-    cmd = Create(None, None, cmd_name='project create')
+    cmd = Create(None, None)
     cmd.run(parsed_args)
     # Tests:
     #  Project was created
@@ -64,7 +64,10 @@ def test_usage_of_default_template(monkeypatch, tmpdir):
     parsed_args.template = ''
     parsed_args.make_default = False
     parsed_args.interactive = False
-    cmd = Create(None, None, cmd_name='project create')
+    parsed_args.no_input = True
+    parsed_args.overwrite_if_exists = False
+    parsed_args.checkout = None
+    cmd = Create(None, None)
     cmd.run(parsed_args)
     assert 'fake-project' in [pth.basename for pth in tmpdir.listdir()]
 
@@ -83,7 +86,7 @@ def test_graceful_handling_of_project_overwrite_attempt(monkeypatch, tmpdir, cap
     parsed_args.make_default = False
     parsed_args.interactive = False
     parsed_args.overwrite_if_exists = False
-    cmd = Create(None, None, cmd_name='project create')
+    cmd = Create(None, None)
     cmd.run(parsed_args)
     cmd.run(parsed_args)
     assert 'Error: A project with the slug you provided already exists in this directory. Try again with a different slug.' in caplog.text
@@ -102,7 +105,10 @@ def test_usage_of_nondefault_template(monkeypatch, tmpdir):
     parsed_args.template = new_repo
     parsed_args.make_default = False
     parsed_args.interactive = False
-    cmd = Create(None, None, cmd_name='project create')
+    parsed_args.no_input = True
+    parsed_args.overwrite_if_exists = False
+    parsed_args.checkout = None
+    cmd = Create(None, None)
     cmd.run(parsed_args)
     dir_contents = [pth.basename for pth in tmpdir.listdir()]
     assert 'fake-project' not in dir_contents
@@ -115,7 +121,6 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     """
     Create should support ability to set a new default template.
     """
-    original_repo = os.path.join(os.getcwd(), 'tests/fake-repo')
     new_repo = os.path.join(os.getcwd(), 'tests/fake-repo-two')
     monkeypatch.chdir(tmpdir)
     # On first pass, we specify new template and set it as new default
@@ -123,7 +128,7 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     parsed_args.template = new_repo
     parsed_args.make_default = True
     parsed_args.interactive = False
-    cmd = Create(None, None, cmd_name='project create')
+    cmd = Create(None, None)
     cmd.run(parsed_args)
     dir_contents = [pth.basename for pth in tmpdir.listdir()]
     assert 'fake-project' not in dir_contents
@@ -139,7 +144,7 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     args_new = mock.Mock()
     args_new.template = ''
     args_new.interactive = False
-    cmd = Create(None, None, cmd_name='project create')
+    cmd = Create(None, None)
     cmd.run(args_new)
     dir_contents_updated = [pth.basename for pth in tmpdir.listdir()]
     assert 'fake-project' not in dir_contents_updated
@@ -163,7 +168,7 @@ def test_github_install(caplog, monkeypatch, cookiecutter_home, tmpdir):
     parsed_args.template = 'gh:associatedpress/fake-repo'
     parsed_args.make_default = False
     parsed_args.interactive = False
-    cmd = Create(None, None, cmd_name='project create')
+    cmd = Create(None, None)
     cmd.run(parsed_args)
     assert 'fake-repo' in os.listdir(cookiecutter_home)
     assert cmd.configs['default_template'] == new_repo

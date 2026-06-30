@@ -1,14 +1,8 @@
-import os
 import re
-import shutil
-import subprocess
 from unittest import mock
 
-import cookiecutter.config as cc_config
-import pytest
 
-from datakit_project import cookiecutters, Templates
-from datakit_project import exceptions as dkit_exceptions
+from datakit_project import Templates
 
 
 def test_noupdate_status(caplog, cookiecutter_home, deploy_template, monkeypatch, tmpdir):
@@ -45,7 +39,7 @@ def test_noupdate_status(caplog, cookiecutter_home, deploy_template, monkeypatch
         parsed_args = mock.Mock()
         # Set status flag to true
         parsed_args.status = True
-        cmd = Templates(None, None, cmd_name='project templates')
+        cmd = Templates(None, None)
         cmd.run(parsed_args)
         header = "Name            SHA       Date         Upstream SHA   Upstream Date   Commits behind"
         repo1 = "fake-repo       a11706f   2017-02-02   a11706f        2017-02-02      Up-to-date"
@@ -98,7 +92,7 @@ def test_repo_behind_upstream(caplog, cookiecutter_home, deploy_template, monkey
         parsed_args = mock.Mock()
         # Set status flag to true
         parsed_args.status = True
-        cmd = Templates(None, None, cmd_name='project templates')
+        cmd = Templates(None, None)
         cmd.run(parsed_args)
         header = "Name            SHA       Date         Upstream SHA   Upstream Date   Commits behind"
         repo1 = "fake-repo       a11706f   2017-02-02   c18705e        2017-06-01      3"

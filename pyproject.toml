@@ -7,7 +7,7 @@ name = "datakit-project"
 version = "0.4.0"
 description = "A datakit plugin to generate new projects."
 authors = [
-    {name = "Serdar Tumgoren", email = "zstumgoren@gmail.com"},
+    {name = "Larry Fenn", email = "lfenn@ap.org"},
 ]
 license = {text = "ISC"}
 keywords = ["datakit"]

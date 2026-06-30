@@ -17,7 +17,7 @@ class Cookiecutters:
                 data = repo.info()
             except NotADirectoryError:
                 continue
-            except AttributeError as e:
+            except AttributeError:
                 continue
             if status:
                 repo.fetch()
