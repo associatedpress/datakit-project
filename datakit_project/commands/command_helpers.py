@@ -7,6 +7,7 @@ from datakit.utils import (
     read_json,
     write_json
 )
+from datakit_project.exceptions import InvalidPluginConfig
 
 
 class CommandHelpers:
@@ -65,4 +66,4 @@ class CommandHelpers:
         except KeyError:
             msg = "ERROR: The 'default_template' setting is missing from" +\
                 "your config file! {}".format(self.plugin_config_path)
-            self.log.info(msg)
+            raise InvalidPluginConfig(msg)

@@ -9,7 +9,7 @@ import cookiecutter.config as cc_config
 from .command_helpers import CommandHelpers
 from .help_text import CREATE_HELP_MSG, NO_TEMPLATES_ERROR_WITH_HELP_MSG
 from datakit_project.cookiecutters import Cookiecutters
-from datakit_project.exceptions import UnsupportedRepoType
+from datakit_project.exceptions import InvalidPluginConfig, UnsupportedRepoType
 from datakit_project.utils import resolve_repo_dir
 
 
@@ -65,15 +65,19 @@ class Create(CommandHelpers, Command):
         return parser
 
     def take_action(self, parsed_args):
-        if parsed_args.interactive and parsed_args.template == '':
-            cc_home = cc_config.DEFAULT_CONFIG['cookiecutters_dir']
-            cc = Cookiecutters(cc_home)
-            templates = cc.list_templates()
-            choice = read_user_choice('project template', templates)
-            template = os.path.join(cc_home, choice)
-        else:
-            # Create project skeleton
-            template = self.get_template(parsed_args)
+        try:
+            if parsed_args.interactive and parsed_args.template == '':
+                cc_home = cc_config.DEFAULT_CONFIG['cookiecutters_dir']
+                cc = Cookiecutters(cc_home)
+                templates = cc.list_templates()
+                choice = read_user_choice('project template', templates)
+                template = os.path.join(cc_home, choice)
+            else:
+                # Create project skeleton
+                template = self.get_template(parsed_args)
+        except InvalidPluginConfig as err:
+            self.log.info("Error: {}".format(err))
+            return
         if template:
             self.log.info("Creating project from template: {}".format(template))
             try:
@@ -99,6 +103,8 @@ class Create(CommandHelpers, Command):
                 )
                 self.log.info(msg)
             except UnsupportedRepoType as err:
+                self.log.info("Error: {}".format(err))
+            except InvalidPluginConfig as err:
                 self.log.info("Error: {}".format(err))
         else:
             self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)

@@ -25,6 +25,23 @@ def test_warning_when_no_default_repo_setting(caplog):
     assert msg in caplog.text
 
 
+@pytest.mark.usefixtures('create_plugin_config_missing_key')
+def test_error_when_default_template_key_missing(caplog):
+    """
+    Test CLI reports a clear error (instead of silently treating it as
+    "no templates installed") when config.json is missing the
+    'default_template' key entirely.
+    """
+    cmd = Create(None, None)
+    parsed_args = mock.Mock()
+    parsed_args.template = ''
+    parsed_args.make_default = False
+    parsed_args.interactive = False
+    cmd.run(parsed_args)
+    msg = "'default_template' setting is missing"
+    assert msg in caplog.text
+
+
 @pytest.mark.usefixtures('create_plugin_config_default')
 def test_create_initial_project(caplog, monkeypatch, tmpdir):
     """

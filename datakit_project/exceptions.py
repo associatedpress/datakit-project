@@ -15,3 +15,9 @@ class UnsupportedRepoType(Exception):
     """
     Raised when a template URL can't be classified as a git or hg repo.
     """
+
+
+class InvalidPluginConfig(Exception):
+    """
+    Raised when a plugin's config.json is missing an expected key.
+    """

@@ -29,6 +29,12 @@ def create_plugin_config_default(plugin_dir):
 
 
 @pytest.fixture
+def create_plugin_config_missing_key(plugin_dir):
+    config_file = os.path.join(plugin_dir, 'config.json')
+    write_json(config_file, {})
+
+
+@pytest.fixture
 def create_plugin_config_fake_repo(plugin_dir):
     config_file = os.path.join(plugin_dir, 'config.json')
     fake_repo_path = os.path.join(os.getcwd(), 'tests/fake-repo')
