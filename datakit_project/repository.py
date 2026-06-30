@@ -1,5 +1,6 @@
 import subprocess
 
+from functools import cached_property
 from pathlib import Path
 
 from datakit_project.exceptions import RepositoryCommandFailed, RepositoryFetchFailed
@@ -34,12 +35,12 @@ class Repository:
         cmd = ['git', 'pull', remote, branch]
         self._syscall(cmd)
 
-    @property
+    @cached_property
     def local_branch(self):
         cmd = ['git', 'rev-parse', '--abbrev-ref', 'HEAD']
         return self._syscall(cmd)
 
-    @property
+    @cached_property
     def upstream_tracking_branch(self):
         cmd = ['git', 'rev-parse', '--abbrev-ref', 'HEAD@{upstream}']
         return self._syscall(cmd)
