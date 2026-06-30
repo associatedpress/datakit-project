@@ -1,4 +1,6 @@
 import argparse
+import os
+
 import cookiecutter.config as cc_config
 from cliff.command import Command
 
@@ -35,7 +37,8 @@ class Templates(CommandHelpers, Command):
         if len(templates) == 0:
             self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)
         else:
-            default_cc_name = self.configs["default_template"].split(cc_home)[1]
+            default_template = self.configs["default_template"]
+            default_cc_name = os.path.basename(default_template) if default_template else None
             if parsed_args.status:
                 tbl = formatter.status(templates, default_cc_name)
             else:
