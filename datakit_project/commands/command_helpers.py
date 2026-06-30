@@ -1,12 +1,15 @@
 import logging
 import os
 
+import cookiecutter.config as cc_config
+
 from datakit.utils import (
     home_dir,
     mkdir_p,
     read_json,
     write_json
 )
+from datakit_project.cookiecutters import Cookiecutters
 from datakit_project.exceptions import InvalidPluginConfig
 
 
@@ -58,6 +61,14 @@ class CommandHelpers:
     @property
     def default_configs(self):
         return {'default_template': ''}
+
+    @property
+    def cc_home(self):
+        return cc_config.DEFAULT_CONFIG['cookiecutters_dir']
+
+    @property
+    def cookiecutters(self):
+        return Cookiecutters(self.cc_home)
 
     @property
     def default_template(self):

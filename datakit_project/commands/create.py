@@ -4,11 +4,9 @@ from cliff.command import Command
 from cookiecutter.main import cookiecutter
 from cookiecutter.prompt import read_user_choice
 from cookiecutter.exceptions import OutputDirExistsException
-import cookiecutter.config as cc_config
 
 from .command_helpers import CommandHelpers
 from .help_text import CREATE_HELP_MSG, NO_TEMPLATES_ERROR_WITH_HELP_MSG
-from datakit_project.cookiecutters import Cookiecutters
 from datakit_project.exceptions import InvalidPluginConfig, UnsupportedRepoType
 from datakit_project.utils import resolve_repo_dir
 
@@ -67,11 +65,9 @@ class Create(CommandHelpers, Command):
     def take_action(self, parsed_args):
         try:
             if parsed_args.interactive and parsed_args.template == '':
-                cc_home = cc_config.DEFAULT_CONFIG['cookiecutters_dir']
-                cc = Cookiecutters(cc_home)
-                templates = cc.list_templates()
+                templates = self.cookiecutters.list_templates()
                 choice = read_user_choice('project template', templates)
-                template = os.path.join(cc_home, choice)
+                template = os.path.join(self.cc_home, choice)
             else:
                 # Create project skeleton
                 template = self.get_template(parsed_args)

@@ -1,7 +1,6 @@
 import argparse
 import os
 
-import cookiecutter.config as cc_config
 from cliff.command import Command
 
 from .command_helpers import CommandHelpers
@@ -10,7 +9,6 @@ from .help_text import (
     TEMPLATE_USAGE_MSG,
     TEMPLATE_UPDATE_MSG
 )
-from datakit_project.cookiecutters import Cookiecutters
 from datakit_project.formatters.templates import Templates as formatter
 
 
@@ -30,10 +28,8 @@ class Templates(CommandHelpers, Command):
         return parser
 
     def take_action(self, parsed_args):
-        cc_home = cc_config.DEFAULT_CONFIG['cookiecutters_dir']
-        cookiecutters = Cookiecutters(cc_home)
-        templates = cookiecutters.info(status=parsed_args.status)
-        self.log.info("\nLocal Cookiecutter templates ({}):\n".format(cc_home))
+        templates = self.cookiecutters.info(status=parsed_args.status)
+        self.log.info("\nLocal Cookiecutter templates ({}):\n".format(self.cc_home))
         if len(templates) == 0:
             self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)
         else:

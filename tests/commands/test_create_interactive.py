@@ -14,7 +14,7 @@ def test_interactive_project_selection(caplog, cookiecutter_home, deploy_templat
     deploy_template(cookiecutter_home, 'tests/fake-repo-two')
     # Set up the configs to point default template at our fake repo
     monkeypatch.chdir(tmpdir)
-    with mock.patch('datakit_project.commands.create.Cookiecutters') as MockClass:
+    with mock.patch('datakit_project.commands.command_helpers.Cookiecutters') as MockClass:
         instance = MockClass.return_value
         instance.list_templates.return_value = ['fake-repo', 'fake-repo-two']
         # Monkeypatch user selection

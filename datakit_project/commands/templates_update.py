@@ -1,10 +1,8 @@
 import argparse
-import cookiecutter.config as cc_config
 from cliff.command import Command
 
 from .command_helpers import CommandHelpers
 from .help_text import TEMPLATE_STATUS_MSG
-from datakit_project.cookiecutters import Cookiecutters
 from datakit_project.prompt import read_multichoice_or_all_input
 
 
@@ -17,8 +15,7 @@ class TemplatesUpdate(CommandHelpers, Command):
         return parser
 
     def take_action(self, parsed_args):
-        cc_home = cc_config.DEFAULT_CONFIG['cookiecutters_dir']
-        cookiecutters = Cookiecutters(cc_home)
+        cookiecutters = self.cookiecutters
         templates = cookiecutters.info(status=True)
         out_of_date = [t for t in templates if t['commits_behind'] != 'Up-to-date']
         if len(out_of_date) == 0:

@@ -28,7 +28,7 @@ def test_multiple_templates(caplog, cookiecutter_home, deploy_template, monkeypa
     # Switch directories
     monkeypatch.chdir(tmpdir)
     # Mock the return value for Cookiecutters.info
-    with mock.patch('datakit_project.commands.templates.Cookiecutters') as MockClass:
+    with mock.patch('datakit_project.commands.command_helpers.Cookiecutters') as MockClass:
         instance = MockClass.return_value
         instance.info.return_value = [
             {
