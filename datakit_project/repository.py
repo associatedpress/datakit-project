@@ -2,7 +2,7 @@ import subprocess
 
 from pathlib import Path
 
-from datakit_project.exceptions import RepositoryFetchFailed
+from datakit_project.exceptions import RepositoryCommandFailed, RepositoryFetchFailed
 
 
 class Repository:
@@ -84,3 +84,4 @@ class Repository:
                 msg.append("Are you connected to a network?")
                 final = "\n".join(msg)
                 raise RepositoryFetchFailed(final)
+            raise RepositoryCommandFailed(output.strip())
