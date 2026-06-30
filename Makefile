@@ -1,4 +1,5 @@
-.PHONY: clean-pyc clean-build docs clean
+.PHONY: clean clean-test clean-pyc clean-build docs help lint test test-all coverage dist install check-release
+.DEFAULT_GOAL := help
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
 try:
@@ -9,88 +10,81 @@ except:
 webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
 endef
 export BROWSER_PYSCRIPT
+
+define PRINT_HELP_PYSCRIPT
+import re, sys
+
+for line in sys.stdin:
+	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
+	if match:
+		target, help = match.groups()
+		print("%-20s %s" % (target, help))
+endef
+export PRINT_HELP_PYSCRIPT
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 help:
-	@echo "clean - remove all build, test, coverage and Python artifacts"
-	@echo "clean-build - remove build artifacts"
-	@echo "clean-pyc - remove Python file artifacts"
-	@echo "clean-test - remove test and coverage artifacts"
-	@echo "lint - check style with flake8"
-	@echo "test - run tests quickly with the default Python"
-	@echo "test-all - run tests on every Python version with tox"
-	@echo "coverage - check code coverage quickly with the default Python"
-	@echo "docs - generate Sphinx HTML documentation, including API docs"
-	@echo "servedocs - compile the docs and watch for changes"
-	@echo "check-release - Check release for errors"
-	@echo "test-release - package and uploade to Test PyPI"
-	@echo "release - package and upload a release to PyPI"
-	@echo "dist - package"
-	@echo "install - install the package to the active Python's site-packages"
+	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: clean-build clean-pyc clean-test
+clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
-clean-build:
+
+clean-build: ## remove build artifacts
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 
-clean-pyc:
+clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-clean-test:
+clean-test: ## remove test and coverage artifacts
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/
 
-lint:
-	flake8 datakit_project tests
+lint: ## check style with ruff
+	uv run ruff check datakit_project tests
 
-test:
-	python setup.py test
+test: ## run tests quickly with the default Python
+	uv run pytest
 
-test-all:
-	tox -p auto
+test-all: ## run tests on the py310-py313 tox matrix
+	uv run tox
 
-coverage:
-	coverage run --source datakit_project setup.py test
-	coverage report -m
-	coverage html
+coverage: ## check code coverage quickly with the default Python
+	uv run coverage run --source datakit_project -m pytest
+	uv run coverage report -m
+	uv run coverage html
 	$(BROWSER) htmlcov/index.html
 
-docs:
+docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/datakit_project.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ datakit_project
+	uv run sphinx-apidoc -o docs/ datakit_project
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
-servedocs: docs
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
+servedocs: docs ## compile the docs watching for changes
+	uv run watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
-
-#
-# Releases
-#
-check-release: ## check release for potential errors
-	twine check dist/*
+check-release: dist ## check release for potential errors
+	uv publish --dry-run dist/*
 
 test-release: clean dist ## release distros to test.pypi.org
-	twine upload -r testpypi dist/*
+	uv publish --publish-url https://test.pypi.org/legacy/ dist/*
 
 release: clean dist ## package and upload a release
-	twine upload -r pypi dist/*
+	uv publish dist/*
 
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
-	@ls -l dist
+	uv build
+	ls -l dist
 
-install: clean
-	python setup.py install
+install: clean ## install the package to the active Python's site-packages
+	uv pip install .

@@ -4,10 +4,6 @@
 .. image:: https://img.shields.io/pypi/pyversions/datakit-project.svg
     :target: https://pypi.python.org/pypi/datakit-project
 
-.. image:: https://img.shields.io/travis/associatedpress/datakit-project.svg
-    :target: https://travis-ci.org/associatedpress/datakit-project
-    :alt: Linux build status on Travis CI
-
 .. image:: https://readthedocs.org/projects/datakit-project/badge/
     :target: http://datakit-project.readthedocs.io/en/latest/
     :alt: Documentation Status
