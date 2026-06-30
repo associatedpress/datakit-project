@@ -1,4 +1,5 @@
 import argparse
+import os
 from cliff.command import Command
 from cookiecutter.main import cookiecutter
 from cookiecutter.prompt import read_user_choice
@@ -67,7 +68,8 @@ class Create(CommandHelpers, Command):
             cc_home = cc_config.DEFAULT_CONFIG['cookiecutters_dir']
             cc = Cookiecutters(cc_home)
             templates = cc.list_templates()
-            template = read_user_choice('project template', templates)
+            choice = read_user_choice('project template', templates)
+            template = os.path.join(cc_home, choice)
         else:
             # Create project skeleton
             template = self.get_template(parsed_args)
