@@ -39,6 +39,7 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     parsed_args.template = fake_repo_path
     parsed_args.make_default = False
     parsed_args.interactive = False
+    parsed_args.checkout = None
     cmd = Create(None, None)
     cmd.run(parsed_args)
     # Tests:
@@ -86,6 +87,7 @@ def test_graceful_handling_of_project_overwrite_attempt(monkeypatch, tmpdir, cap
     parsed_args.make_default = False
     parsed_args.interactive = False
     parsed_args.overwrite_if_exists = False
+    parsed_args.checkout = None
     cmd = Create(None, None)
     cmd.run(parsed_args)
     cmd.run(parsed_args)
@@ -128,6 +130,7 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     parsed_args.template = new_repo
     parsed_args.make_default = True
     parsed_args.interactive = False
+    parsed_args.checkout = None
     cmd = Create(None, None)
     cmd.run(parsed_args)
     dir_contents = [pth.basename for pth in tmpdir.listdir()]
@@ -144,6 +147,7 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     args_new = mock.Mock()
     args_new.template = ''
     args_new.interactive = False
+    args_new.checkout = None
     cmd = Create(None, None)
     cmd.run(args_new)
     dir_contents_updated = [pth.basename for pth in tmpdir.listdir()]
@@ -168,6 +172,7 @@ def test_github_install(caplog, monkeypatch, cookiecutter_home, tmpdir):
     parsed_args.template = 'gh:associatedpress/fake-repo'
     parsed_args.make_default = False
     parsed_args.interactive = False
+    parsed_args.checkout = None
     cmd = Create(None, None)
     cmd.run(parsed_args)
     assert 'fake-repo' in os.listdir(cookiecutter_home)

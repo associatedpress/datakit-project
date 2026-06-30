@@ -46,7 +46,7 @@ def test_noupdate_status(caplog, cookiecutter_home, deploy_template, monkeypatch
         repo2 = "fake-repo-two   55f62a0   2019-03-06   55f62a0        2019-03-06      Up-to-date"
         expected = [header, repo1, repo2]
         # Some gross cleanup of caplog.text is necessary because it displays log level info
-        actual = [re.sub(r"templates.py\s+\d+\sINFO", "", line).strip()  for line in caplog.text.split('\n')]
+        actual = [re.sub(r".*templates\.py:\d+\s*", "", line).strip()  for line in caplog.text.split('\n')]
         # Test that expected lines appear in displayed text
         for line in expected:
             assert line in actual
@@ -99,7 +99,7 @@ def test_repo_behind_upstream(caplog, cookiecutter_home, deploy_template, monkey
         repo2 = "fake-repo-two   55f62a0   2019-03-06   55f62a0        2019-03-06      Up-to-date"
         expected = [header, repo1, repo2]
         # Some gross cleanup of caplog.text is necessary because it displays log level info
-        actual = [re.sub(r"templates.py\s+\d+\sINFO", "", line).strip()  for line in caplog.text.split('\n')]
+        actual = [re.sub(r".*templates\.py:\d+\s*", "", line).strip()  for line in caplog.text.split('\n')]
         # Test that expected lines appear in displayed text
         for line in expected:
             assert line in actual

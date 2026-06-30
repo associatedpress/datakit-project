@@ -1,3 +1,4 @@
+import os
 from unittest import mock
 
 import pytest
@@ -27,6 +28,8 @@ def test_interactive_project_selection(caplog, cookiecutter_home, deploy_templat
         parsed_args.interactive = True
         # Use no_input to disable additional cookiecutter prompts
         parsed_args.no_input = True
+        parsed_args.checkout = None
         cmd = Create(None, None)
         cmd.run(parsed_args)
-        assert "Creating project from template: fake-repo" in caplog.text
+        expected_template = os.path.join(cookiecutter_home, 'fake-repo')
+        assert f"Creating project from template: {expected_template}" in caplog.text
