@@ -109,3 +109,25 @@ def test_update(repo_info, selection, expected, monkeypatch):
         cmd.run(parsed_args)
         instance.info.assert_called_once_with(status=True)
         instance.update.assert_called_once_with(expected)
+
+
+def test_update_invalid_selection(caplog, monkeypatch):
+    repo_info = [{
+        'Name': 'fake-repo', 'SHA': 'a11706f', 'Date': '2017-02-02',
+        'Subject': 'Testing', 'upstream_sha': 'c18705e',
+        'upstream_date': '2017-02-02', 'upstream_subject': 'Some newer commit',
+        'commits_behind': 3
+    }]
+    with mock.patch('datakit_project.commands.templates_update.Cookiecutters') as MockClass:
+        instance = MockClass.return_value
+        instance.info.return_value = repo_info
+        instance.upstream_tracking_branch.return_value = 'origin/master'
+        monkeypatch.setattr(
+            'datakit_project.commands.templates_update.read_multichoice_or_all_input',
+            lambda choices: ['5']
+        )
+        parsed_args = mock.Mock()
+        cmd = TemplatesUpdate(None, None)
+        cmd.run(parsed_args)
+        instance.update.assert_not_called()
+        assert "Invalid selection(s): 5" in caplog.text

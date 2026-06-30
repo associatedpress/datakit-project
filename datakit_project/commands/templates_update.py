@@ -40,6 +40,14 @@ class TemplatesUpdate(CommandHelpers, Command):
                 to_update = sorted([temp['Name'] for temp in choices.values()])
                 self.log.info("Updating all templates...")
             else:
+                invalid = [num for num in response if num not in choices]
+                if invalid:
+                    self.log.error(
+                        "Invalid selection(s): {}. Please choose from: {}\n".format(
+                            ", ".join(invalid), ", ".join(sorted(choices))
+                        )
+                    )
+                    return
                 to_update = [choices[num]['Name'] for num in response]
                 self.log.info("Updating selected templates...")
             cookiecutters.update(to_update)
