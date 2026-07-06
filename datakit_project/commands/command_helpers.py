@@ -3,6 +3,7 @@ import os
 
 import cookiecutter.config as cc_config
 
+from datakit import ConfigField
 from datakit.utils import (
     home_dir,
     mkdir_p,
@@ -18,6 +19,13 @@ class CommandHelpers:
     "Base class containing common helper methods for Cliff Command instances"
 
     log = logging.getLogger(__name__)
+
+    plugin_slug = 'datakit-project'
+
+    config_spec = [
+        ConfigField('default_template',
+                    help='Default Cookiecutter template used by `project create`'),
+    ]
 
     def get_template(self, parsed_args):
         if parsed_args.template != '':
