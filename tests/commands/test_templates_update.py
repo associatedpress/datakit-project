@@ -14,7 +14,6 @@ def test_nothing_to_update(caplog):
           'upstream_date': '2017-02-02', 'upstream_subject': 'Testing',
           'commits_behind': 'Up-to-date'
         }]
-        instance.upstream_tracking_branch.return_value = 'origin/master'
         # Run the command
         parsed_args = mock.Mock()
         cmd = TemplatesUpdate(None, None)
@@ -98,7 +97,6 @@ def test_update(repo_info, selection, expected, monkeypatch):
     with mock.patch('datakit_project.commands.command_helpers.Cookiecutters') as MockClass:
         instance = MockClass.return_value
         instance.info.return_value = repo_info
-        instance.upstream_tracking_branch.return_value = 'origin/master'
         monkeypatch.setattr(
             'datakit_project.commands.templates_update.read_multichoice_or_all_input',
             lambda choices: selection
@@ -121,7 +119,6 @@ def test_update_invalid_selection(caplog, monkeypatch):
     with mock.patch('datakit_project.commands.command_helpers.Cookiecutters') as MockClass:
         instance = MockClass.return_value
         instance.info.return_value = repo_info
-        instance.upstream_tracking_branch.return_value = 'origin/master'
         monkeypatch.setattr(
             'datakit_project.commands.templates_update.read_multichoice_or_all_input',
             lambda choices: ['5']

@@ -1,9 +1,19 @@
 import os
+import re
 import shutil
 
 import cookiecutter.config as cc_config
 import pytest
 from datakit.utils import mkdir_p, write_json
+
+
+@pytest.fixture
+def log_lines():
+    """Return captured log records as bare lines, stripped of cliff's
+    ``module.py:lineno`` prefix so table output can be compared directly."""
+    def _log_lines(caplog):
+        return [re.sub(r".*\.py:\d+\s*", "", line).strip() for line in caplog.text.splitlines()]
+    return _log_lines
 
 
 @pytest.fixture

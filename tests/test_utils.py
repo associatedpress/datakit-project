@@ -39,6 +39,20 @@ def test_repo_dir_for_url():
     assert expected_dir == actual_dir
 
 
+def test_repo_dir_for_hg_repo(monkeypatch):
+    """
+    Mercurial repos land in cookiecutter's dir without stripping a '.git' suffix.
+    """
+    monkeypatch.setattr(
+        'datakit_project.utils.identify_repo',
+        lambda raw_url: ('hg', 'https://bitbucket.org/team/fake-repo'),
+    )
+    cc_home = cc_config.DEFAULT_CONFIG['cookiecutters_dir']
+    expected_dir = os.path.join(cc_home, 'fake-repo')
+    actual_dir = resolve_repo_dir('https://bitbucket.org/team/fake-repo.git')
+    assert expected_dir == actual_dir
+
+
 def test_repo_dir_for_unsupported_repo_type(monkeypatch):
     """
     Should raise a clear error instead of crashing with UnboundLocalError.

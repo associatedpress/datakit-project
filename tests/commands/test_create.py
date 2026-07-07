@@ -56,6 +56,8 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     parsed_args.template = fake_repo_path
     parsed_args.make_default = False
     parsed_args.interactive = False
+    parsed_args.no_input = True
+    parsed_args.overwrite_if_exists = False
     parsed_args.checkout = None
     cmd = Create(None, None)
     cmd.run(parsed_args)
@@ -65,8 +67,7 @@ def test_create_initial_project(caplog, monkeypatch, tmpdir):
     #  Template set as default since it's first template encountered
     assert cmd.configs['default_template'] == fake_repo_path
     msg_pattern = r"Set default template to.+?fake-repo in plugin config (.+?config.json)"
-    log_pattern_matches = True if re.search(msg_pattern, caplog.text) else False
-    assert log_pattern_matches
+    assert re.search(msg_pattern, caplog.text)
 
 
 @pytest.mark.usefixtures('create_plugin_config_fake_repo')
@@ -147,6 +148,8 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     parsed_args.template = new_repo
     parsed_args.make_default = True
     parsed_args.interactive = False
+    parsed_args.no_input = True
+    parsed_args.overwrite_if_exists = False
     parsed_args.checkout = None
     cmd = Create(None, None)
     cmd.run(parsed_args)
@@ -155,8 +158,7 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     assert 'fake-project-two' in dir_contents
     assert cmd.configs['default_template'].endswith('fake-repo-two')
     msg_pattern = r"Set default template to.+?fake-repo-two in plugin config (.+?config.json)"
-    log_pattern_matches = True if re.search(msg_pattern, caplog.text) else False
-    assert log_pattern_matches
+    assert re.search(msg_pattern, caplog.text)
     # Remove fake project and recreate without specifying the template
     # to ensure it's now applied as the default
     project_directory = os.path.join(tmpdir.strpath, 'fake-project-two')
@@ -164,12 +166,53 @@ def test_new_default_template(caplog, monkeypatch, tmpdir):
     args_new = mock.Mock()
     args_new.template = ''
     args_new.interactive = False
+    args_new.no_input = True
+    args_new.overwrite_if_exists = False
     args_new.checkout = None
     cmd = Create(None, None)
     cmd.run(args_new)
     dir_contents_updated = [pth.basename for pth in tmpdir.listdir()]
     assert 'fake-project' not in dir_contents_updated
     assert 'fake-project-two' in dir_contents_updated
+
+
+@pytest.mark.usefixtures('create_plugin_config_fake_repo')
+@pytest.mark.parametrize('exception_name, message_fragment', [
+    ('UnsupportedRepoType', 'Could not classify template'),
+    ('InvalidPluginConfig', 'default_template missing'),
+])
+def test_create_reports_errors_after_template_resolution(
+    caplog, monkeypatch, tmpdir, exception_name, message_fragment
+):
+    """
+    Errors raised while resolving the created repo's directory should be logged
+    rather than propagated.
+    """
+    from datakit_project import exceptions
+
+    exception_cls = getattr(exceptions, exception_name)
+    monkeypatch.chdir(tmpdir)
+    monkeypatch.setattr(
+        'datakit_project.commands.create.cookiecutter',
+        lambda *args, **kwargs: None,
+    )
+
+    def raise_error(template):
+        raise exception_cls(message_fragment)
+
+    monkeypatch.setattr(
+        'datakit_project.commands.create.resolve_repo_dir', raise_error
+    )
+    parsed_args = mock.Mock()
+    parsed_args.template = ''
+    parsed_args.make_default = False
+    parsed_args.interactive = False
+    parsed_args.no_input = True
+    parsed_args.overwrite_if_exists = False
+    parsed_args.checkout = None
+    cmd = Create(None, None)
+    cmd.run(parsed_args)
+    assert "Error: {}".format(message_fragment) in caplog.text
 
 
 def test_github_install(caplog, monkeypatch, cookiecutter_home, tmpdir):
@@ -189,6 +232,8 @@ def test_github_install(caplog, monkeypatch, cookiecutter_home, tmpdir):
     parsed_args.template = 'gh:associatedpress/fake-repo'
     parsed_args.make_default = False
     parsed_args.interactive = False
+    parsed_args.no_input = True
+    parsed_args.overwrite_if_exists = False
     parsed_args.checkout = None
     cmd = Create(None, None)
     cmd.run(parsed_args)

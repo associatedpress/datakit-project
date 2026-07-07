@@ -1,66 +1,36 @@
-import re
 from unittest import mock
-
 
 from datakit_project import Templates
 
 
-def test_no_templates(caplog, cookiecutter_home, monkeypatch, tmpdir):
+def test_no_templates(caplog, cookiecutter_home):
     """
-    Templates should provide helpful info if no cookiecutter templates are installed
+    Templates should point the user at install help when no cookiecutters exist.
     """
-    # Switch directories
-    monkeypatch.chdir(tmpdir)
-    # Run the command
-    parsed_args = mock.Mock()
     cmd = Templates(None, None)
-    cmd.run(parsed_args)
+    cmd.run(mock.Mock(status=False))
     assert cookiecutter_home in caplog.text
     assert "No project templates have been installed!" in caplog.text
 
 
-def test_multiple_templates(caplog, cookiecutter_home, deploy_template, monkeypatch, tmpdir):
+def test_multiple_templates(caplog, log_lines):
     """
-    Templates should list installed cookiecutters
+    Templates should render installed cookiecutters as a table sorted by name.
     """
-    deploy_template(cookiecutter_home, 'tests/fake-repo')
-    deploy_template(cookiecutter_home, 'tests/fake-repo-two')
-    # Switch directories
-    monkeypatch.chdir(tmpdir)
-    # Mock the return value for Cookiecutters.info
     with mock.patch('datakit_project.commands.command_helpers.Cookiecutters') as MockClass:
-        instance = MockClass.return_value
-        instance.info.return_value = [
-            {
-              'Name': 'fake-repo',
-              'SHA': 'a11706f',
-              'Date': '2017-02-02',
-              'Subject': 'Testing'
-            },
-            {
-              'Name': 'fake-repo-two',
-              'SHA': '55f62a0',
-              'Date': '2019-03-06',
-              'Subject': 'Testing'
-            },
+        MockClass.return_value.info.return_value = [
+            {'Name': 'fake-repo', 'SHA': 'a11706f', 'Date': '2017-02-02', 'Subject': 'Testing'},
+            {'Name': 'fake-repo-two', 'SHA': '55f62a0', 'Date': '2019-03-06', 'Subject': 'Testing'},
         ]
-        # Run the command
-        parsed_args = mock.Mock()
-        parsed_args.status = False
         cmd = Templates(None, None)
-        cmd.run(parsed_args)
-        header = "Name            SHA       Date         Subject"
-        repo1 = "fake-repo       a11706f   2017-02-02   Testing"
-        repo2 = "fake-repo-two   55f62a0   2019-03-06   Testing"
-        expected = [header, repo1, repo2]
-        # Some gross cleanup of caplog.text is necessary because it displays log level info
-        actual = [re.sub(r".*templates\.py:\d+\s*", "", line).strip()  for line in caplog.text.split('\n')]
-        # Test that expected lines appear in displayed text
-        for line in expected:
-            assert line in actual
-        # Test alpha sortting by repo name
-        header_idx = actual.index(header)
-        repo1_idx = actual.index(repo1)
-        repo2_idx = actual.index(repo2)
-        assert header_idx < repo1_idx
-        assert repo1_idx < repo2_idx
+        cmd.run(mock.Mock(status=False))
+    expected = [
+        "Name            SHA       Date         Subject",
+        "fake-repo       a11706f   2017-02-02   Testing",
+        "fake-repo-two   55f62a0   2019-03-06   Testing",
+    ]
+    lines = log_lines(caplog)
+    assert all(row in lines for row in expected)
+    # Header first, then rows in name-sorted order.
+    positions = [lines.index(row) for row in expected]
+    assert positions == sorted(positions)

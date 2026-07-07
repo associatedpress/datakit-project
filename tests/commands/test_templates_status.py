@@ -1,111 +1,56 @@
-import re
 from unittest import mock
 
+import pytest
 
 from datakit_project import Templates
 
 
-def test_noupdate_status(caplog, cookiecutter_home, deploy_template, monkeypatch, tmpdir):
-    deploy_template(cookiecutter_home, 'tests/fake-repo')
-    deploy_template(cookiecutter_home, 'tests/fake-repo-two')
-    # Switch directories
-    monkeypatch.chdir(tmpdir)
-    # Mock the return value for Cookiecutters.info
-    with mock.patch('datakit_project.commands.command_helpers.Cookiecutters') as MockClass:
-        instance = MockClass.return_value
-        instance.info.return_value = [
-            {
-              'Name': 'fake-repo',
-              'SHA': 'a11706f',
-              'Date': '2017-02-02',
-              'Subject': 'Testing',
-              'upstream_sha': 'a11706f',
-              'upstream_date': '2017-02-02',
-              'upstream_subject': 'Testing',
-              'commits_behind': 'Up-to-date'
-            },
-            {
-              'Name': 'fake-repo-two',
-              'SHA': '55f62a0',
-              'Date': '2019-03-06',
-              'Subject': 'Testing',
-              'upstream_sha': '55f62a0',
-              'upstream_date': '2019-03-06',
-              'upstream_subject': 'Testing',
-              'commits_behind': 'Up-to-date'
-            },
-        ]
-        # Run the command
-        parsed_args = mock.Mock()
-        # Set status flag to true
-        parsed_args.status = True
-        cmd = Templates(None, None)
-        cmd.run(parsed_args)
-        header = "Name            SHA       Date         Upstream SHA   Upstream Date   Commits behind"
-        repo1 = "fake-repo       a11706f   2017-02-02   a11706f        2017-02-02      Up-to-date"
-        repo2 = "fake-repo-two   55f62a0   2019-03-06   55f62a0        2019-03-06      Up-to-date"
-        expected = [header, repo1, repo2]
-        # Some gross cleanup of caplog.text is necessary because it displays log level info
-        actual = [re.sub(r".*templates\.py:\d+\s*", "", line).strip()  for line in caplog.text.split('\n')]
-        # Test that expected lines appear in displayed text
-        for line in expected:
-            assert line in actual
-        # Test alpha sortting by repo name
-        header_idx = actual.index(header)
-        repo1_idx = actual.index(repo1)
-        repo2_idx = actual.index(repo2)
-        assert header_idx < repo1_idx
-        assert repo1_idx < repo2_idx
+def _repo(name, sha, date, up_sha, up_date, behind):
+    return {
+        'Name': name, 'SHA': sha, 'Date': date, 'Subject': 'Testing',
+        'upstream_sha': up_sha, 'upstream_date': up_date,
+        'upstream_subject': 'Testing', 'commits_behind': behind,
+    }
 
 
-def test_repo_behind_upstream(caplog, cookiecutter_home, deploy_template, monkeypatch, tmpdir):
-    deploy_template(cookiecutter_home, 'tests/fake-repo')
-    deploy_template(cookiecutter_home, 'tests/fake-repo-two')
-    # Switch directories
-    monkeypatch.chdir(tmpdir)
-    # Mock the return value for Cookiecutters.info
+HEADER = "Name            SHA       Date         Upstream SHA   Upstream Date   Commits behind"
+
+
+@pytest.mark.parametrize('info, rows', [
+    pytest.param(
+        [
+            _repo('fake-repo', 'a11706f', '2017-02-02', 'a11706f', '2017-02-02', 'Up-to-date'),
+            _repo('fake-repo-two', '55f62a0', '2019-03-06', '55f62a0', '2019-03-06', 'Up-to-date'),
+        ],
+        [
+            "fake-repo       a11706f   2017-02-02   a11706f        2017-02-02      Up-to-date",
+            "fake-repo-two   55f62a0   2019-03-06   55f62a0        2019-03-06      Up-to-date",
+        ],
+        id='all-up-to-date',
+    ),
+    pytest.param(
+        [
+            _repo('fake-repo', 'a11706f', '2017-02-02', 'c18705e', '2017-06-01', 3),
+            _repo('fake-repo-two', '55f62a0', '2019-03-06', '55f62a0', '2019-03-06', 'Up-to-date'),
+        ],
+        [
+            "fake-repo       a11706f   2017-02-02   c18705e        2017-06-01      3",
+            "fake-repo-two   55f62a0   2019-03-06   55f62a0        2019-03-06      Up-to-date",
+        ],
+        id='one-behind-upstream',
+    ),
+])
+def test_status_table(info, rows, caplog, log_lines):
+    """
+    `templates --status` should render the upstream comparison, showing the
+    commits-behind count and sorting rows by template name.
+    """
     with mock.patch('datakit_project.commands.command_helpers.Cookiecutters') as MockClass:
-        instance = MockClass.return_value
-        instance.info.return_value = [
-            {
-              'Name': 'fake-repo',
-              'SHA': 'a11706f',
-              'Date': '2017-02-02',
-              'Subject': 'Testing',
-              'upstream_sha': 'c18705e',
-              'upstream_date': '2017-06-01',
-              'upstream_subject': 'Some newer commit',
-              'commits_behind': 3
-            },
-            {
-              'Name': 'fake-repo-two',
-              'SHA': '55f62a0',
-              'Date': '2019-03-06',
-              'Subject': 'Testing',
-              'upstream_sha': '55f62a0',
-              'upstream_date': '2019-03-06',
-              'upstream_subject': 'Testing',
-              'commits_behind': 'Up-to-date'
-            },
-        ]
-        # Run the command
-        parsed_args = mock.Mock()
-        # Set status flag to true
-        parsed_args.status = True
+        MockClass.return_value.info.return_value = info
         cmd = Templates(None, None)
-        cmd.run(parsed_args)
-        header = "Name            SHA       Date         Upstream SHA   Upstream Date   Commits behind"
-        repo1 = "fake-repo       a11706f   2017-02-02   c18705e        2017-06-01      3"
-        repo2 = "fake-repo-two   55f62a0   2019-03-06   55f62a0        2019-03-06      Up-to-date"
-        expected = [header, repo1, repo2]
-        # Some gross cleanup of caplog.text is necessary because it displays log level info
-        actual = [re.sub(r".*templates\.py:\d+\s*", "", line).strip()  for line in caplog.text.split('\n')]
-        # Test that expected lines appear in displayed text
-        for line in expected:
-            assert line in actual
-        # Test alpha sortting by repo name
-        header_idx = actual.index(header)
-        repo1_idx = actual.index(repo1)
-        repo2_idx = actual.index(repo2)
-        assert header_idx < repo1_idx
-        assert repo1_idx < repo2_idx
+        cmd.run(mock.Mock(status=True))
+    lines = log_lines(caplog)
+    expected = [HEADER, *rows]
+    assert all(line in lines for line in expected)
+    positions = [lines.index(line) for line in expected]
+    assert positions == sorted(positions)
