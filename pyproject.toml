@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "datakit-project"
-version = "0.5.2"
+version = "0.5.3"
 description = "A datakit plugin to generate new projects."
 authors = [
     {name = "Larry Fenn", email = "lfenn@ap.org"},
