@@ -24,7 +24,10 @@ class CommandHelpers:
 
     config_spec = [
         ConfigField('default_template',
-                    help='Default Cookiecutter template used by `project create`'),
+                    help='Default Cookiecutter template for `project create` (a name '
+                         'under ~/.cookiecutters). Leave blank if you have not '
+                         'installed one yet -- add one with '
+                         '`datakit project create --template <url>`'),
     ]
 
     def get_template(self, parsed_args):

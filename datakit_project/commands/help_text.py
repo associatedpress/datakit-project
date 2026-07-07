@@ -19,6 +19,11 @@ TEMPLATE_UPDATE_MSG = """To update locally installed Cookiecutter templates:
 
 """
 
+UNIFIED_TEMPLATE_SUGGESTION_MSG = """New here? The AP unified project template is a good starting point:
+
+    datakit project create --template https://github.com/associatedpress/cookiecutter-unified-project/
+"""
+
 TEMPLATE_INSTALL_HELP_MSG = """Check out the below URLs for pre-baked templates and installation options:
 
   - A Pantry Full of Cookiecutters
@@ -33,7 +38,11 @@ TEMPLATE_USAGE_MSG = """To use a locally installed template:
     datakit project create --template my-awesome-cookiecutter
 """
 
-NO_TEMPLATES_ERROR_WITH_HELP_MSG = '\n'.join((NO_TEMPLATES_ERROR_MSG, TEMPLATE_INSTALL_HELP_MSG))
+NO_TEMPLATES_ERROR_WITH_HELP_MSG = '\n'.join((
+    NO_TEMPLATES_ERROR_MSG,
+    UNIFIED_TEMPLATE_SUGGESTION_MSG,
+    TEMPLATE_INSTALL_HELP_MSG
+))
 
 CREATE_HELP_MSG = '\n'.join((
     TEMPLATE_USAGE_MSG,
