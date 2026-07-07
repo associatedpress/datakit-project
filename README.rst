@@ -45,6 +45,5 @@ Please be sure to check out the latest release of Cookiecutter to see
 if it might be a better fit.
 
 .. _Cookiecutter: https://cookiecutter.readthedocs.io/en/latest/
-.. _datakit command-line framework: https://datakit.ap.org/
-
-https://datakit-core.readthedocs.io/en/latest/readme.html
+.. _Cliff: https://docs.openstack.org/cliff/
+.. _datakit command-line framework: https://datakit-core.readthedocs.io/en/latest/

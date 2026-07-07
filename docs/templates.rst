@@ -59,12 +59,10 @@ You can update the default template by using the ``--make-default`` flag::
 
     $ datakit project create --make-default --template gh:associatedpress/cookiecutter-some-other-project
 
-Or you can directy edit the ``default_template`` variable in the :ref:`plugin-configuration`:
+Or you can set the ``default_template`` value directly with the ``datakit
+config`` command family (see :ref:`plugin-configuration`)::
 
-  .. code::
-
-    # Edit ~/.datakit/plugins/datakit-project/config.json
-    {"default_template": "/path/to/.cookiecutters/cookiecutter-basic-project"}
+    $ datakit config set datakit-project default_template cookiecutter-basic-project
 
 
 .. _Cookiecutter: https://cookiecutter.readthedocs.io/en/latest/

@@ -6,20 +6,26 @@ Pre-flight check
 
 In order to use `datakit-project`, you must have:
 
-* Python >= 3.5
+* Python >= 3.10
 * git_
+* uv_
 
 .. _git: https://git-scm.com/
+.. _uv: https://docs.astral.sh/uv/
 
 Install the plugin
 ~~~~~~~~~~~~~~~~~~
 
-For a `user install`_ from the command line::
+Install this plugin alongside datakit-core_. The recommended way is with uv_,
+which keeps the ``datakit`` command and its plugins in a single isolated
+environment::
 
-    $ pip install --user datakit-project
+    $ uv tool install datakit-core --with datakit-project
+
+See the datakit-core_ docs for other ways to install and combine plugins.
 
 
-.. _user install: https://pip.pypa.io/en/stable/user_guide/#user-installs
+.. _datakit-core: https://datakit-core.readthedocs.io/en/latest/
 
 
 .. _plugin-configuration:
@@ -27,10 +33,14 @@ For a `user install`_ from the command line::
 Plugin Configuration
 ~~~~~~~~~~~~~~~~~~~~
 
-By default, `datakit-project` stores its configurations in ``~/.datakit/plugins/datakit-project/config.json``.
+By default, `datakit-project` stores its configuration in ``~/.datakit/plugins/datakit-project/config.json``.
 
-For example, the plugin configuration file contains the setting for the :ref:`default-template`:
+The one setting is the :ref:`default-template`. The recommended way to manage it
+is with the generic ``datakit config`` command family that ships with
+datakit-core_::
 
-.. code::
+    $ datakit config set datakit-project default_template gh:associatedpress/cookiecutter-r-project
+    $ datakit config list datakit-project
 
-   {"default_template": "/path/to/.cookiecutters/cookiecutter-basic-project"}
+``datakit config`` writes the config file for you, so there's no need to
+hand-edit it.
