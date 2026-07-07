@@ -49,8 +49,8 @@ class Templates:
         tbl = pt.PrettyTable(
             field_names=fields,
             border=False,
-            hrules=pt.NONE,
-            vrules=pt.NONE,
+            hrules=pt.HRuleStyle.NONE,
+            vrules=pt.VRuleStyle.NONE,
             left_padding_width=2,
             sortby='Name'
         )
