@@ -26,7 +26,9 @@ class Cookiecutters:
             repos_info.append(data)
         return repos_info
 
-    def update(self, templates=[]):
+    def update(self, templates=None):
+        if templates is None:
+            templates = []
         for template in templates:
             repo_dir = os.path.join(self.cookiecutters_dir, template)
             repo = Repository(repo_dir)

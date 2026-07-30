@@ -1,16 +1,18 @@
 import argparse
+
 from cliff.command import Command
+
+from datakit_project.prompt import read_multichoice_or_all_input
 
 from .command_helpers import CommandHelpers
 from .help_text import TEMPLATE_STATUS_MSG
-from datakit_project.prompt import read_multichoice_or_all_input
 
 
 class TemplatesUpdate(CommandHelpers, Command):
     "Update locally installed Cookiecutter templates"
 
     def get_parser(self, prog_name):
-        parser = super(TemplatesUpdate, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.formatter_class = argparse.RawTextHelpFormatter
         return parser
 

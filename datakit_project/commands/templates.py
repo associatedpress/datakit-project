@@ -3,20 +3,17 @@ import os
 
 from cliff.command import Command
 
-from .command_helpers import CommandHelpers
-from .help_text import (
-    NO_TEMPLATES_ERROR_WITH_HELP_MSG,
-    TEMPLATE_USAGE_MSG,
-    TEMPLATE_UPDATE_MSG
-)
 from datakit_project.formatters.templates import Templates as formatter
+
+from .command_helpers import CommandHelpers
+from .help_text import NO_TEMPLATES_ERROR_WITH_HELP_MSG, TEMPLATE_UPDATE_MSG, TEMPLATE_USAGE_MSG
 
 
 class Templates(CommandHelpers, Command):
     "List project templates"
 
     def get_parser(self, prog_name):
-        parser = super(Templates, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.formatter_class = argparse.RawTextHelpFormatter
         parser.add_argument(
             '-s',
@@ -29,7 +26,7 @@ class Templates(CommandHelpers, Command):
 
     def take_action(self, parsed_args):
         templates = self.cookiecutters.info(status=parsed_args.status)
-        self.log.info("\nLocal Cookiecutter templates ({}):\n".format(self.cc_home))
+        self.log.info(f"\nLocal Cookiecutter templates ({self.cc_home}):\n")
         if len(templates) == 0:
             self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)
         else:

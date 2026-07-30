@@ -1,15 +1,11 @@
 import logging
 import os
+from typing import ClassVar
 
 import cookiecutter.config as cc_config
-
 from datakit import ConfigField
-from datakit.utils import (
-    home_dir,
-    mkdir_p,
-    read_json,
-    write_json
-)
+from datakit.utils import home_dir, mkdir_p, read_json, write_json
+
 from datakit_project.cookiecutters import Cookiecutters
 from datakit_project.exceptions import InvalidPluginConfig
 
@@ -22,7 +18,7 @@ class CommandHelpers:
 
     plugin_slug = 'datakit-project'
 
-    config_spec = [
+    config_spec: ClassVar[list[ConfigField]] = [
         ConfigField('default_template',
                     help='Default Cookiecutter template for `project create` (a name '
                          'under ~/.cookiecutters). Leave blank if you have not '
@@ -87,5 +83,5 @@ class CommandHelpers:
             return self.configs['default_template']
         except KeyError:
             msg = "ERROR: The 'default_template' setting is missing from" +\
-                "your config file! {}".format(self.plugin_config_path)
+                f"your config file! {self.plugin_config_path}"
             raise InvalidPluginConfig(msg)

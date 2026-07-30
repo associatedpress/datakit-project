@@ -6,7 +6,6 @@ import pytest
 from datakit_project import Create
 
 
-
 #TODO: use parametrize with repo data for Cookiecutters
 @pytest.mark.usefixtures('create_plugin_config_fake_repo')
 def test_interactive_project_selection(caplog, cookiecutter_home, deploy_template, monkeypatch, tmpdir):

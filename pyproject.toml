@@ -42,7 +42,7 @@ Tracker = "https://github.com/associatedpress/datakit-project/issues"
 dev = [
     "bumpversion",
     "coverage",
-    "ruff",
+    "ruff==0.16.0",
     "pytest",
     "Sphinx",
     "tox",

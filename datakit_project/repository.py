@@ -1,5 +1,4 @@
 import subprocess
-
 from functools import cached_property
 from pathlib import Path
 
@@ -47,10 +46,7 @@ class Repository:
 
     @property
     def commits_behind_upstream(self):
-        cmd = ['git', 'rev-list', '--count', "{}..{}".format(
-            self.local_branch,
-            self.upstream_tracking_branch
-        )]
+        cmd = ['git', 'rev-list', '--count', f"{self.local_branch}..{self.upstream_tracking_branch}"]
         return int(self._syscall(cmd))
 
     def fetch(self):

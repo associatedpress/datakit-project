@@ -212,7 +212,7 @@ def test_create_reports_errors_after_template_resolution(
     parsed_args.checkout = None
     cmd = Create(None, None)
     cmd.run(parsed_args)
-    assert "Error: {}".format(message_fragment) in caplog.text
+    assert f"Error: {message_fragment}" in caplog.text
 
 
 def test_github_install(caplog, monkeypatch, cookiecutter_home, tmpdir):

@@ -6,7 +6,7 @@ the local path or URL to a Cookiecutter project repo, e.g.:
 
 """
 
-NO_TEMPLATES_ERROR_MSG = '\n'.join(("No project templates have been installed!", TEMPLATE_INSTALL_ON_CREATE_MSG))
+NO_TEMPLATES_ERROR_MSG = f"No project templates have been installed!\n{TEMPLATE_INSTALL_ON_CREATE_MSG}"
 
 TEMPLATE_STATUS_MSG = """Use the below command for more detailed status information on templates:
 
@@ -38,14 +38,8 @@ TEMPLATE_USAGE_MSG = """To use a locally installed template:
     datakit project create --template my-awesome-cookiecutter
 """
 
-NO_TEMPLATES_ERROR_WITH_HELP_MSG = '\n'.join((
-    NO_TEMPLATES_ERROR_MSG,
-    UNIFIED_TEMPLATE_SUGGESTION_MSG,
-    TEMPLATE_INSTALL_HELP_MSG
-))
+NO_TEMPLATES_ERROR_WITH_HELP_MSG = (
+    f"{NO_TEMPLATES_ERROR_MSG}\n{UNIFIED_TEMPLATE_SUGGESTION_MSG}\n{TEMPLATE_INSTALL_HELP_MSG}"
+)
 
-CREATE_HELP_MSG = '\n'.join((
-    TEMPLATE_USAGE_MSG,
-    TEMPLATE_INSTALL_ON_CREATE_MSG,
-    TEMPLATE_INSTALL_HELP_MSG
-))
+CREATE_HELP_MSG = f"{TEMPLATE_USAGE_MSG}\n{TEMPLATE_INSTALL_ON_CREATE_MSG}\n{TEMPLATE_INSTALL_HELP_MSG}"

@@ -34,7 +34,7 @@ def resolve_repo_dir(template):
             repo_dir = os.path.normpath(os.path.join(cc_home, tail))
         else:
             raise UnsupportedRepoType(
-                "Could not classify '{}' as a git or hg repository.".format(template)
+                f"Could not classify '{template}' as a git or hg repository."
             )
     else:
         repo_dir = os.path.abspath(template)

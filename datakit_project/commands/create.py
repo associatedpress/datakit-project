@@ -1,14 +1,16 @@
 import argparse
 import os
+
 from cliff.command import Command
+from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
 from cookiecutter.prompt import read_user_choice
-from cookiecutter.exceptions import OutputDirExistsException
+
+from datakit_project.exceptions import InvalidPluginConfig, UnsupportedRepoType
+from datakit_project.utils import resolve_repo_dir
 
 from .command_helpers import CommandHelpers
 from .help_text import CREATE_HELP_MSG, NO_TEMPLATES_ERROR_WITH_HELP_MSG
-from datakit_project.exceptions import InvalidPluginConfig, UnsupportedRepoType
-from datakit_project.utils import resolve_repo_dir
 
 
 class Create(CommandHelpers, Command):
@@ -18,7 +20,7 @@ class Create(CommandHelpers, Command):
         return CREATE_HELP_MSG
 
     def get_parser(self, prog_name):
-        parser = super(Create, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.formatter_class = argparse.RawTextHelpFormatter
         parser.add_argument(
             '-t',
@@ -72,10 +74,10 @@ class Create(CommandHelpers, Command):
                 # Create project skeleton
                 template = self.get_template(parsed_args)
         except InvalidPluginConfig as err:
-            self.log.info("Error: {}".format(err))
+            self.log.info(f"Error: {err}")
             return
         if template:
-            self.log.info("Creating project from template: {}".format(template))
+            self.log.info(f"Creating project from template: {template}")
             try:
                 cookiecutter(
                     template,
@@ -87,10 +89,7 @@ class Create(CommandHelpers, Command):
                 # Update default template if it's empty or specifically requested
                 if self.default_template == '' or parsed_args.make_default:
                     self.update_configs({'default_template': repo_dir})
-                    tmplt_msg = "Set default template to {} in plugin config ({})".format(
-                        repo_dir,
-                        self.plugin_config_path
-                    )
+                    tmplt_msg = f"Set default template to {repo_dir} in plugin config ({self.plugin_config_path})"
                     self.log.info(tmplt_msg)
             except OutputDirExistsException:
                 msg = (
@@ -99,8 +98,8 @@ class Create(CommandHelpers, Command):
                 )
                 self.log.info(msg)
             except UnsupportedRepoType as err:
-                self.log.info("Error: {}".format(err))
+                self.log.info(f"Error: {err}")
             except InvalidPluginConfig as err:
-                self.log.info("Error: {}".format(err))
+                self.log.info(f"Error: {err}")
         else:
             self.log.info(NO_TEMPLATES_ERROR_WITH_HELP_MSG)
